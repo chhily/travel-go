@@ -46,9 +46,10 @@ class MyApp extends StatelessWidget {
             statusBarBrightness: Brightness.light,
           ),
         ),
-        colorScheme: ColorScheme.fromSeed(
-            seedColor: AppColors.primary,
+        colorScheme: ColorScheme.fromSwatch().copyWith(
+            // seedColor: AppColors.primary,
             primary: AppColors.primary,
+            secondary: AppColors.secondary,
             surfaceTint: AppColors.black,
             background: AppColors.white),
         useMaterial3: true,
