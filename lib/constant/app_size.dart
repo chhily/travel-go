@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 class FontSize {
   FontSize._();
-  static const double fontSizeSmall = 8;
-  static const double fontSizeMedium = 12;
-  static const double fontSizeRegular = 14;
-  static const double fontSizeBig = 16;
-  static const double fontSizeTitle = 20;
-  static const double fontSizeHuge = 24;
+  static const double fontSizeSmall = 4;
+  static const double fontSizeMedium = 8;
+  static const double fontSizeRegular = 12;
+  static const double fontSizeBig = 14;
+  static const double fontSizeTitle = 16;
+  static const double fontSizeHuge = 20;
 }
 
 class AppRadius {
