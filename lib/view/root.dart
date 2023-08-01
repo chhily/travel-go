@@ -21,21 +21,20 @@ class TravelGoRootState extends State<TravelGoRoot>
     AppColors.white,
     AppColors.white,
     AppColors.white,
-    AppColors.white,
   ];
 
   final List<IconData> icons = [
     FontAwesomeIcons.house,
     FontAwesomeIcons.magnifyingGlass,
     FontAwesomeIcons.solidBell,
-    FontAwesomeIcons.solidUser
+    FontAwesomeIcons.solidUser,
   ];
 
   @override
   void initState() {
     super.initState();
     currentPage = 0;
-    tabController = TabController(length: 5, vsync: this);
+    tabController = TabController(length: icons.length, vsync: this);
     tabController.animation!.addListener(
       () {
         final value = tabController.animation!.value.round();
@@ -75,7 +74,12 @@ class TravelGoRootState extends State<TravelGoRoot>
             controller: tabController,
             dragStartBehavior: DragStartBehavior.down,
             physics: const NeverScrollableScrollPhysics(),
-            children: const [HomePage()],
+            children: const [
+              HomePage(),
+              HomePage(),
+              HomePage(),
+              HomePage(),
+            ],
           ),
         ),
       ),

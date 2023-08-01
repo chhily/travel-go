@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:travel_go/constant/app_theme.dart';
-import 'package:travel_go/view/home/home.dart';
 import 'package:travel_go/view/root.dart';
 
 void main() {
@@ -16,6 +15,7 @@ class MyApp extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     return MaterialApp(
       title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       theme: AppTheme.theme(textTheme),
       home: const TravelGoRoot(),
     );

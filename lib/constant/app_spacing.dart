@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-
+/// regular 12 ++ 4
 class HorizontalSpacing {
   HorizontalSpacing._();
   static const small = SizedBox(width: 4);
@@ -9,6 +9,7 @@ class HorizontalSpacing {
   static const huge = SizedBox(width: 20);
 }
 
+/// regular 12 ++ 4
 class VerticalSpacing {
   VerticalSpacing._();
   static const small = SizedBox(height: 4);
@@ -17,7 +18,7 @@ class VerticalSpacing {
   static const big = SizedBox(height: 16);
   static const huge = SizedBox(height: 20);
 }
-
+/// regular 12 ++ 4
 class AppGap {
   AppGap._();
   static const smallGap = EdgeInsets.symmetric(horizontal: 8, vertical: 4);

@@ -22,6 +22,9 @@ class AppTheme {
           shape: RoundedRectangleBorder(borderRadius: AppRadius.regular),
         ),
       ),
+      iconTheme: const IconThemeData(
+        color: AppColors.primary,
+      ),
       appBarTheme: AppBarTheme(
         backgroundColor: Colors.transparent,
         elevation: 0,
