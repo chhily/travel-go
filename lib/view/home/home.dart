@@ -33,9 +33,11 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
             const Spacer(),
-            CircleAvatar(
-              radius: 25,
-              backgroundColor: AppColors.primary,
+            Container(
+              padding: const EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                  border: Border.all(color: AppColors.primary)),
               child: UIHelper.imageAvatarHelper(
                   "https://i.pinimg.com/564x/4b/12/d0/4b12d0489be1afaf835cca152ef186e0.jpg"),
             ),

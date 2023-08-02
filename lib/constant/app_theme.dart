@@ -36,7 +36,8 @@ class AppTheme {
           ),
           systemOverlayStyle: const SystemUiOverlayStyle(
             statusBarColor: Colors.transparent,
-            statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
+            statusBarIconBrightness:
+                Brightness.dark, // For Android (dark icons)
             statusBarBrightness: Brightness.light,
           ),
         ),
@@ -52,6 +53,7 @@ class AppTheme {
         ),
         useMaterial3: true,
         splashFactory: InkSparkle.splashFactory,
+        splashColor: AppColors.secondary.withOpacity(0.1),
         colorScheme: ColorScheme.fromSwatch().copyWith(
             onBackground: AppColors.white,
             primary: AppColors.primary,

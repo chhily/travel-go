@@ -48,8 +48,8 @@ class SearchPage extends StatelessWidget {
                 ],
               ),
               Positioned(
-                top: 20,
-                right: 0,
+                top: 24,
+                right: 10,
                 child: IconButton(
                   onPressed: () {
                     showSearch(

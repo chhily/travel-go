@@ -1,8 +1,10 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:travel_go/constant/app_color.dart';
 import 'package:travel_go/view/home/home.dart';
+import 'package:travel_go/view/notification/notification_page.dart';
 import 'package:travel_go/widget/bottom_bar.dart';
 
 import 'search/explore_page.dart';
@@ -61,32 +63,31 @@ class TravelGoRootState extends State<TravelGoRoot>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // appBar: AppBar(
-      //   bottom: PreferredSize(
-      //     preferredSize: Size.fromHeight(0),
-      //     child: SizedBox(),
-      //   ),
-      // ),
-      body: BottomBar(
-        icons: icons,
-        currentPage: currentPage,
-        tabController: tabController,
-        colors: colors,
-        unselectedColor: AppColors.textSecondary,
-        barColor: AppColors.primary,
-        start: 10,
-        end: 2,
-        child: TabBarView(
-          controller: tabController,
-          dragStartBehavior: DragStartBehavior.down,
-          physics: const NeverScrollableScrollPhysics(),
-          children: const [
-            SafeArea(child: HomePage()),
-            SearchPage(),
-            HomePage(),
-            HomePage(),
-          ],
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+      ),
+      child: Scaffold(
+        body: BottomBar(
+          icons: icons,
+          currentPage: currentPage,
+          tabController: tabController,
+          colors: colors,
+          unselectedColor: AppColors.textSecondary,
+          barColor: AppColors.primary,
+          start: 10,
+          end: 2,
+          child: TabBarView(
+            controller: tabController,
+            dragStartBehavior: DragStartBehavior.down,
+            physics: const NeverScrollableScrollPhysics(),
+            children: const [
+              SafeArea(child: HomePage()),
+              SearchPage(),
+              SafeArea(child: NotificationPage()),
+              HomePage(),
+            ],
+          ),
         ),
       ),
     );
