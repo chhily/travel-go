@@ -49,7 +49,7 @@ class _BottomBarState extends State<BottomBar>
       end: Offset.zero,
     ).animate(CurvedAnimation(
       parent: _controller,
-      curve: Curves.easeIn,
+      curve: Curves.decelerate,
     ))
       ..addListener(() {
         if (mounted) {
@@ -136,7 +136,7 @@ class _BottomBarState extends State<BottomBar>
           bottom: widget.start,
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 300),
-            curve: Curves.easeIn,
+            curve: Curves.slowMiddle,
             width: isOnTop == true ? 0 : 40,
             height: isOnTop == true ? 0 : 40,
             decoration: BoxDecoration(

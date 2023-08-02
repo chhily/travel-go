@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:travel_go/constant/app_size.dart';
 import 'package:travel_go/constant/app_spacing.dart';
+import 'package:travel_go/mock/mock_data.dart';
 import 'package:travel_go/util/ui_helper.dart';
 
 class CategoryHighlightWidget extends StatelessWidget {
@@ -8,36 +9,16 @@ class CategoryHighlightWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<String> imageUrl = [
-      "https://i.pinimg.com/564x/87/10/fe/8710fe60ac262b1e7f23e1f87b90dc3b.jpg",
-      "https://i.pinimg.com/564x/78/5c/c4/785cc4a79c67112c8d15a6ccda181eca.jpg",
-      "https://i.pinimg.com/564x/b8/2e/33/b82e332473712b0f1b56b5b331970d5b.jpg",
-      "https://i.pinimg.com/564x/de/eb/14/deeb14358042b9f77581e923740c1b4c.jpg",
-      "https://i.pinimg.com/564x/34/cf/fb/34cffbe6160b2cedf3d8e59d27d901e9.jpg",
-      "https://i.pinimg.com/564x/82/43/0e/82430e56d426a43b3d5951a760571e1d.jpg",
-      "https://i.pinimg.com/564x/1f/7a/36/1f7a36ee1580c0fc154ba480a16d5ec1.jpg"
-    ];
-
-    final List<String> title = [
-      "Italia",
-      "Paris",
-      "Japan",
-      "Japan - FUJI",
-      "Cambodia",
-      "Bali",
-      "Singapore",
-    ];
-
     return Wrap(
       runSpacing: 10,
       spacing: 10,
       alignment: WrapAlignment.start,
       children: List.generate(
-        imageUrl.length,
+        MockData.country.length,
         (index) {
           return _buildCategoryWidget(
-              imgUrl: imageUrl[index],
-              tile: title[index],
+              imgUrl: MockData.countryImgUrl[index],
+              tile: MockData.country[index],
               available: index,
               context: context);
         },

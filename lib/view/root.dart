@@ -5,6 +5,8 @@ import 'package:travel_go/constant/app_color.dart';
 import 'package:travel_go/view/home/home.dart';
 import 'package:travel_go/widget/bottom_bar.dart';
 
+import 'search/explore_page.dart';
+
 class TravelGoRoot extends StatefulWidget {
   const TravelGoRoot({super.key});
 
@@ -25,7 +27,7 @@ class TravelGoRootState extends State<TravelGoRoot>
 
   final List<IconData> icons = [
     FontAwesomeIcons.house,
-    FontAwesomeIcons.magnifyingGlass,
+    FontAwesomeIcons.solidCompass,
     FontAwesomeIcons.solidBell,
     FontAwesomeIcons.solidUser,
   ];
@@ -60,27 +62,31 @@ class TravelGoRootState extends State<TravelGoRoot>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: BottomBar(
-          icons: icons,
-          currentPage: currentPage,
-          tabController: tabController,
-          colors: colors,
-          unselectedColor: AppColors.textSecondary,
-          barColor: AppColors.primary,
-          start: 10,
-          end: 2,
-          child: TabBarView(
-            controller: tabController,
-            dragStartBehavior: DragStartBehavior.down,
-            physics: const NeverScrollableScrollPhysics(),
-            children: const [
-              HomePage(),
-              HomePage(),
-              HomePage(),
-              HomePage(),
-            ],
-          ),
+      // appBar: AppBar(
+      //   bottom: PreferredSize(
+      //     preferredSize: Size.fromHeight(0),
+      //     child: SizedBox(),
+      //   ),
+      // ),
+      body: BottomBar(
+        icons: icons,
+        currentPage: currentPage,
+        tabController: tabController,
+        colors: colors,
+        unselectedColor: AppColors.textSecondary,
+        barColor: AppColors.primary,
+        start: 10,
+        end: 2,
+        child: TabBarView(
+          controller: tabController,
+          dragStartBehavior: DragStartBehavior.down,
+          physics: const NeverScrollableScrollPhysics(),
+          children: const [
+            SafeArea(child: HomePage()),
+            SearchPage(),
+            HomePage(),
+            HomePage(),
+          ],
         ),
       ),
     );

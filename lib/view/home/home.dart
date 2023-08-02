@@ -27,7 +27,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             Row(
               children: [
-                const Icon(FontAwesomeIcons.locationPin),
+                const Icon(FontAwesomeIcons.locationDot),
                 HorizontalSpacing.regular,
                 UIHelper.textHelper(text: "Location")
               ],
