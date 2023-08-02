@@ -40,13 +40,26 @@ class NotificationPage extends StatelessWidget {
               ),
             ],
           ),
-          Expanded(
-            child: const DefaultTabController(
+          const Expanded(
+            child: DefaultTabController(
                 length: 2,
-                child: TabBarView(
+                child: Column(
                   children: [
-                    Icon(Icons.directions_car),
-                    Icon(Icons.directions_transit),
+                    VerticalSpacing.regular,
+                    TabBar(
+                      tabs: [
+                        Tab(icon: Icon(Icons.directions_car)),
+                        Tab(icon: Icon(Icons.directions_transit)),
+                      ],
+                    ),
+                    Expanded(
+                      child: TabBarView(
+                        children: [
+                          Icon(Icons.directions_car),
+                          Icon(Icons.directions_transit),
+                        ],
+                      ),
+                    ),
                   ],
                 )),
           )
