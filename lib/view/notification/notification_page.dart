@@ -11,13 +11,13 @@ class NotificationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: AppGap.regularGap,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: AppGap.regularGap,
+          child: Row(
             children: [
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -44,47 +44,47 @@ class NotificationPage extends StatelessWidget {
               ),
             ],
           ),
-          Expanded(
-            child: DefaultTabController(
-                length: 2,
-                child: Column(
-                  children: [
-                    VerticalSpacing.regular,
-                    Container(
-                      height: 36,
-                      decoration: BoxDecoration(
-                        borderRadius: AppRadius.regular,
-                        color: AppColors.contentColor,
+        ),
+        Expanded(
+          child: DefaultTabController(
+            length: 2,
+            child: Column(
+              children: [
+                Container(
+                  margin: AppGap.regularGap,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    borderRadius: AppRadius.regular,
+                    color: AppColors.contentColor,
+                  ),
+                  child: TabBar(
+                    indicatorSize: TabBarIndicatorSize.tab,
+                    padding: EdgeInsets.zero,
+                    indicator: BoxDecoration(
+                        color: AppColors.white,
+                        border: Border.all(color: AppColors.contentColor),
+                        borderRadius: AppRadius.regular),
+                    tabs: [
+                      Tab(
+                        icon: UIHelper.textHelper(text: "Notifications"),
                       ),
-                      child: TabBar(
-                        indicatorSize: TabBarIndicatorSize.tab,
-                        padding: EdgeInsets.zero,
-                        indicator: BoxDecoration(
-                            color: AppColors.white,
-                            border: Border.all(color: AppColors.contentColor),
-                            borderRadius: AppRadius.regular),
-                        tabs: [
-                          Tab(
-                            icon: UIHelper.textHelper(text: "Notifications"),
-                          ),
-                          Tab(icon: UIHelper.textHelper(text: "Activity")),
-                        ],
-                      ),
-                    ),
-                    VerticalSpacing.regular,
-                    const Expanded(
-                      child: TabBarView(
-                        children: [
-                          NotificationListWidget(),
-                          ActivityListWidget(),
-                        ],
-                      ),
-                    ),
-                  ],
-                )),
-          )
-        ],
-      ),
+                      Tab(icon: UIHelper.textHelper(text: "Activity")),
+                    ],
+                  ),
+                ),
+                const Expanded(
+                  child: TabBarView(
+                    children: [
+                      NotificationListWidget(),
+                      ActivityListWidget(),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

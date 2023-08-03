@@ -72,16 +72,10 @@ class UserPage extends StatelessWidget {
 
   Widget buildProfileImg(
       {required BuildContext context, required String imgUrl}) {
-    return Container(
+    return UIHelper.cacheImageHelper(
+      image: imgUrl,
+      borderRadius: BorderRadius.circular(0),
       height: MediaQuery.of(context).size.height,
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: NetworkImage(imgUrl),
-          fit: BoxFit.cover,
-          filterQuality: FilterQuality.high,
-          onError: (exception, stackTrace) {},
-        ),
-      ),
     );
   }
 }

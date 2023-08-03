@@ -52,7 +52,8 @@ class UIHelper {
     );
   }
 
-  static Card cardHelper({required Widget child, double? elevation, Color? colors}) {
+  static Card cardHelper(
+      {required Widget child, double? elevation, Color? colors}) {
     return Card(
       elevation: elevation ?? 0,
       color: colors ?? AppColors.white,
@@ -106,7 +107,14 @@ class UIHelper {
   }
 
   static Widget cacheImageHelper(
-      {required String image, double? width, double? height}) {
+      {required String image,
+      double? width,
+      double? height,
+      Widget? child,
+      BoxFit? fit,
+      Color? colorDecoration,
+      double opacity = 1.0,
+      BorderRadiusGeometry? borderRadius}) {
     return CachedNetworkImage(
       imageUrl: image,
       imageBuilder: (context, imageProvider) {
@@ -114,19 +122,28 @@ class UIHelper {
           width: width,
           height: height,
           decoration: BoxDecoration(
-            borderRadius: AppRadius.regular,
-            image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
+            color: colorDecoration,
+            borderRadius: borderRadius ?? AppRadius.regular,
+            image: DecorationImage(
+                image: imageProvider,
+                fit: fit ?? BoxFit.cover,
+                opacity: opacity),
           ),
+          child: child,
         );
       },
       placeholder: (context, url) {
-        return const Center(
-          child: SizedBox(
-            height: 12,
-            width: 12,
-            child: CircularProgressIndicator.adaptive(
-              valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
-              strokeWidth: 1,
+        return SizedBox(
+          width: width,
+          height: height,
+          child: const Center(
+            child: SizedBox(
+              height: 12,
+              width: 12,
+              child: CircularProgressIndicator.adaptive(
+                valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+                strokeWidth: 1,
+              ),
             ),
           ),
         );

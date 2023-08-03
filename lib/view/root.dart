@@ -8,7 +8,7 @@ import 'package:travel_go/view/notification/notification_page.dart';
 import 'package:travel_go/view/user/user_page.dart';
 import 'package:travel_go/widget/bottom_bar.dart';
 
-import 'search/explore_page.dart';
+import 'explore/explore_page.dart';
 
 class TravelGoRoot extends StatefulWidget {
   const TravelGoRoot({super.key});

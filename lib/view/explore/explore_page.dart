@@ -5,8 +5,8 @@ import 'package:travel_go/constant/app_size.dart';
 import 'package:travel_go/constant/app_spacing.dart';
 import 'package:travel_go/mock/mock_data.dart';
 import 'package:travel_go/util/ui_helper.dart';
-import 'package:travel_go/view/search/widget/search_explore.dart';
-import 'package:travel_go/view/search/widget/suggestion_place.dart';
+import 'package:travel_go/view/explore/widget/search_explore.dart';
+import 'package:travel_go/view/explore/widget/suggestion_place.dart';
 
 class SearchPage extends StatelessWidget {
   const SearchPage({super.key});
@@ -17,16 +17,14 @@ class SearchPage extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          height: MediaQuery.of(context).size.height * 0.25,
+        UIHelper.cacheImageHelper(
+          image: MockData.bgImage,
+          height: MediaQuery.of(context).size.height * 0.3,
           width: MediaQuery.of(context).size.width,
-          decoration: const BoxDecoration(
-              color: AppColors.secondary,
-              image: DecorationImage(
-                fit: BoxFit.fill,
-                opacity: 0.5,
-                image: NetworkImage(MockData.bgImage),
-              )),
+          fit: BoxFit.fill,
+          opacity: 0.5,
+          colorDecoration: AppColors.secondary,
+          borderRadius: BorderRadius.circular(0),
           child: Stack(
             alignment: Alignment.center,
             children: [
