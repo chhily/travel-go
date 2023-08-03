@@ -3,6 +3,8 @@ import 'package:travel_go/constant/app_color.dart';
 import 'package:travel_go/constant/app_size.dart';
 import 'package:travel_go/constant/app_spacing.dart';
 import 'package:travel_go/util/ui_helper.dart';
+import 'package:travel_go/view/notification/widget/activity_list.dart';
+import 'package:travel_go/view/notification/widget/notification_list.dart';
 
 class NotificationPage extends StatelessWidget {
   const NotificationPage({super.key});
@@ -22,7 +24,9 @@ class NotificationPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   UIHelper.textHelper(
-                      text: "Notification", fontSize: FontSize.fontSizeHuge),
+                      text: "Notifications",
+                      fontSize: FontSize.fontSizeHuge,
+                      fontWeight: FontWeight.bold),
                   VerticalSpacing.regular,
                   UIHelper.textHelper(
                       text: "You always get the latest news",
@@ -40,23 +44,39 @@ class NotificationPage extends StatelessWidget {
               ),
             ],
           ),
-          const Expanded(
+          Expanded(
             child: DefaultTabController(
                 length: 2,
                 child: Column(
                   children: [
                     VerticalSpacing.regular,
-                    TabBar(
-                      tabs: [
-                        Tab(icon: Icon(Icons.directions_car)),
-                        Tab(icon: Icon(Icons.directions_transit)),
-                      ],
+                    Container(
+                      height: 36,
+                      decoration: BoxDecoration(
+                        borderRadius: AppRadius.regular,
+                        color: AppColors.contentColor,
+                      ),
+                      child: TabBar(
+                        indicatorSize: TabBarIndicatorSize.tab,
+                        padding: EdgeInsets.zero,
+                        indicator: BoxDecoration(
+                            color: AppColors.white,
+                            border: Border.all(color: AppColors.contentColor),
+                            borderRadius: AppRadius.regular),
+                        tabs: [
+                          Tab(
+                            icon: UIHelper.textHelper(text: "Notifications"),
+                          ),
+                          Tab(icon: UIHelper.textHelper(text: "Activity")),
+                        ],
+                      ),
                     ),
-                    Expanded(
+                    VerticalSpacing.regular,
+                    const Expanded(
                       child: TabBarView(
                         children: [
-                          Icon(Icons.directions_car),
-                          Icon(Icons.directions_transit),
+                          NotificationListWidget(),
+                          ActivityListWidget(),
                         ],
                       ),
                     ),

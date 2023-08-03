@@ -159,7 +159,7 @@ class _BottomBarState extends State<BottomBar>
                             .animateTo(
                           scrollBottomBarController.position.minScrollExtent,
                           duration: const Duration(milliseconds: 500),
-                          curve: Curves.easeIn,
+                          curve: Curves.slowMiddle,
                         )
                             .then((value) {
                           if (mounted) {
@@ -188,6 +188,7 @@ class _BottomBarState extends State<BottomBar>
             position: _offsetAnimation,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(500),
+              clipBehavior: Clip.antiAliasWithSaveLayer,
               child: Container(
                 width: MediaQuery.of(context).size.width * 0.8,
                 decoration: BoxDecoration(
@@ -200,6 +201,8 @@ class _BottomBarState extends State<BottomBar>
                     indicatorPadding: const EdgeInsets.fromLTRB(6, 0, 6, 0),
                     controller: widget.tabController,
                     indicator: const BoxDecoration(),
+                    padding: EdgeInsets.zero,
+                    dividerColor: Colors.transparent,
                     tabs: navBarIcon(
                         icons: widget.icons, iconColors: widget.colors),
                   ),

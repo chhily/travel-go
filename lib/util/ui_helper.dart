@@ -15,10 +15,12 @@ class UIHelper {
     FontWeight? fontWeight,
     double? fontSize,
     Color? textColor,
+    int? maxLines,
   }) {
     return Text(
       text,
       textAlign: textAlign,
+      maxLines: maxLines,
       style: TextStyle(
         fontWeight: fontWeight ?? FontWeight.normal,
         fontSize: fontSize ?? FontSize.fontSizeRegular,
@@ -50,9 +52,10 @@ class UIHelper {
     );
   }
 
-  static Card cardHelper({required Widget child}) {
+  static Card cardHelper({required Widget child, double? elevation, Color? colors}) {
     return Card(
-      elevation: 0,
+      elevation: elevation ?? 0,
+      color: colors ?? AppColors.white,
       margin: EdgeInsets.zero,
       shape: RoundedRectangleBorder(
         borderRadius: AppRadius.regular,
@@ -156,6 +159,29 @@ class UIHelper {
           ),
         );
       },
+    );
+  }
+
+  static OutlinedButton outlineButton(
+      {required void Function()? onPressed,
+      required String buttonText,
+      Widget? childWidget,
+      Color? buttonColor,
+      Color? foregroundColor,
+      BorderSide? side,
+      OutlinedBorder? shape}) {
+    return OutlinedButton(
+      onPressed: onPressed,
+      style: OutlinedButton.styleFrom(
+          elevation: 0,
+          backgroundColor: buttonColor,
+          foregroundColor: foregroundColor,
+          side: side,
+          shape: shape),
+      child: childWidget ??
+          Container(
+            child: textHelper(text: buttonText),
+          ),
     );
   }
 }

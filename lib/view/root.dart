@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:travel_go/constant/app_color.dart';
 import 'package:travel_go/view/home/home.dart';
 import 'package:travel_go/view/notification/notification_page.dart';
+import 'package:travel_go/view/user/user_page.dart';
 import 'package:travel_go/widget/bottom_bar.dart';
 
 import 'search/explore_page.dart';
@@ -65,6 +66,8 @@ class TravelGoRootState extends State<TravelGoRoot>
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
+        statusBarBrightness: Brightness.dark,
+        statusBarIconBrightness: Brightness.dark,
         statusBarColor: Colors.transparent,
       ),
       child: Scaffold(
@@ -85,7 +88,7 @@ class TravelGoRootState extends State<TravelGoRoot>
               SafeArea(child: HomePage()),
               SearchPage(),
               SafeArea(child: NotificationPage()),
-              HomePage(),
+              UserPage(),
             ],
           ),
         ),

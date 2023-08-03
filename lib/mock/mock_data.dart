@@ -26,4 +26,6 @@ class MockData {
 
   static const String bgImage =
       "https://i.pinimg.com/564x/72/fd/7e/72fd7e36ebd2d212ac7825ab4037d5c9.jpg";
+
+  static const String userCoverImg = "https://i.pinimg.com/564x/f6/33/76/f63376dde3fbeb37398655ea9472a286.jpg";
 }

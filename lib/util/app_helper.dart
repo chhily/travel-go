@@ -25,4 +25,33 @@ class AppHelper {
     }
     return number;
   }
+
+  static String dateTimeFormatter({DateTime? dateTime}) {
+    if (dateTime == null) return "N/A";
+    final result = DateFormat('dd MMM yyyy hh a').format(dateTime.toLocal());
+    return result;
+  }
+
+  static DateTime generateRandomDateTime(
+      DateTime startDateTime, DateTime endDateTime) {
+    Random random = Random();
+    int randomDays =
+        random.nextInt((endDateTime.difference(startDateTime).inDays) + 1);
+    return startDateTime.add(Duration(days: randomDays));
+  }
+
+  static String generateRandomString(int maxWords) {
+    Random random = Random();
+    List<String> words = [];
+    for (int i = 0; i < maxWords; i++) {
+      int wordLength = random.nextInt(10) + 3;
+      String word = '';
+      for (int j = 0; j < wordLength; j++) {
+        int character = random.nextInt(26) + 97;
+        word += String.fromCharCode(character);
+      }
+      words.add(word);
+    }
+    return words.join(", ");
+  }
 }
