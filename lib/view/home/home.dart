@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:travel_go/constant/app_color.dart';
 import 'package:travel_go/constant/app_size.dart';
 import 'package:travel_go/constant/app_spacing.dart';
+import 'package:travel_go/provider/geo/geo_handler.dart';
 import 'package:travel_go/util/ui_helper.dart';
 import 'package:travel_go/view/home/widget/choice_chip.dart';
 import 'package:travel_go/view/home/widget/highlight_card.dart';
@@ -18,6 +19,14 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int? valueSelected = 0;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    GeoHandler.getCurrentPosition();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView(
