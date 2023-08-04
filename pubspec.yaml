@@ -17,7 +17,6 @@ dependencies:
   font_awesome_flutter: ^10.5.0
   cached_network_image: ^3.2.3
   intl: ^0.18.1
-  flutter_launcher_icons: ^0.13.1
   flutter_native_splash: ^2.3.1
   geolocator: ^9.0.2
 
@@ -28,6 +27,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.2
+  flutter_launcher_icons: "^0.13.1"
 
 
 flutter_launcher_icons:
