@@ -10,4 +10,5 @@ class AppColors {
   static const Color black = Color(0xFF000000);
   static const Color textSecondary = Color(0xFF8E8E93);
   static const Color contentColor = Color(0xFFEEEFF0);
+  static const Color redAccent = Color(0xFFFF2D55);
 }

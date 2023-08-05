@@ -10,6 +10,8 @@ void main() {
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   FlavorConfig(flavor: Flavor.dev, values: FlavorValues(appName: "DEV"));
   runApp(const MyApp());
-  GeoHandler.handleLocationPermission();
+  GeoHandler().handleLocationPermission();
   FlutterNativeSplash.remove();
 }
+
+

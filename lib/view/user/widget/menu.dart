@@ -33,6 +33,7 @@ class UserMenuWidget extends StatelessWidget {
     ];
 
     return ListView.builder(
+      shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) => itemMenu(
           iconData: icons[index],

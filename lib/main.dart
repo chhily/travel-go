@@ -17,7 +17,9 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.theme(textTheme),
-      home: const TravelGoRoot(),
+      home: GestureDetector(
+          onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+          child: const TravelGoRoot()),
     );
   }
 }

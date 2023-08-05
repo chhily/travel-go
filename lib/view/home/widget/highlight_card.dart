@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:travel_go/constant/app_size.dart';
 import 'package:travel_go/constant/app_spacing.dart';
+import 'package:travel_go/mock/mock_data.dart';
 import 'package:travel_go/util/ui_helper.dart';
+import 'package:travel_go/view/details/item_details.dart';
 
 import '../../../constant/app_color.dart';
 
 class HighlightCardWidget extends StatelessWidget {
-  const HighlightCardWidget({super.key});
+  final List<ItemObject> itemValue;
+  const HighlightCardWidget({super.key, required this.itemValue});
 
   @override
   Widget build(BuildContext context) {
@@ -14,16 +17,33 @@ class HighlightCardWidget extends StatelessWidget {
       height: MediaQuery.of(context).size.height * 0.45,
       child: ListView.separated(
         separatorBuilder: (context, index) => HorizontalSpacing.big,
-        itemCount: 5,
+        itemCount: itemValue.length,
         itemBuilder: (context, index) {
-          return buildInfoCard(context);
+          final item = itemValue.elementAt(index);
+          return GestureDetector(
+              onTap: () async {
+                // UIHelper.loadingDialogHelper(context);
+                // await Future.delayed(const Duration(seconds: 1))
+                //     .whenComplete(() {
+                //   Navigator.pop(context);
+                // }).then((value) {
+                //
+                // });
+
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (context) {
+                    return ItemDetails(itemObject: item);
+                  },
+                ));
+              },
+              child: buildInfoCard(context, item));
         },
         scrollDirection: Axis.horizontal,
       ),
     );
   }
 
-  Widget buildInfoCard(BuildContext context) {
+  Widget buildInfoCard(BuildContext context, ItemObject item) {
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.5,
       height: MediaQuery.of(context).size.height * 0.25,
@@ -31,18 +51,20 @@ class HighlightCardWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          UIHelper.cacheImageHelper(
-              width: MediaQuery.of(context).size.width * 0.5,
-              height: MediaQuery.of(context).size.height * 0.25,
-              image:
-                  "https://i.pinimg.com/564x/61/be/53/61be5315da1d09bab542478dd3f6d5e1.jpg"),
+          Hero(
+            tag: item.title ?? "N/A",
+            child: UIHelper.cacheImageHelper(
+                width: MediaQuery.of(context).size.width * 0.5,
+                height: MediaQuery.of(context).size.height * 0.25,
+                image: item.image ?? ""),
+          ),
           VerticalSpacing.regular,
           UIHelper.textHelper(
-              text: "Name of Destination", fontSize: FontSize.fontSizeBig),
+              text: item.title ?? "N/A", fontSize: FontSize.fontSizeBig),
           VerticalSpacing.small,
           UIHelper.textHelper(
-              text:
-                  "Outline project component link content stroke group. Flatten community library.",
+              text: item.description ?? "N/A",
+              maxLines: 3,
               fontSize: FontSize.fontSizeRegular,
               textColor: AppColors.textSecondary),
           VerticalSpacing.regular,

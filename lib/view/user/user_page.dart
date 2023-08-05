@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:travel_go/constant/app_size.dart';
 import 'package:travel_go/constant/app_spacing.dart';
-import 'package:travel_go/mock/mock_data.dart';
 import 'package:travel_go/util/ui_helper.dart';
 import 'package:travel_go/view/user/widget/menu.dart';
 
@@ -19,7 +18,7 @@ class UserPage extends StatelessWidget {
         Expanded(
           child: Stack(
             children: [
-              buildProfileImg(context: context, imgUrl: MockData.userCoverImg),
+              // buildProfileImg(context: context, imgUrl: MockData.userCoverImg),
               Positioned(
                 top: MediaQuery.of(context).size.height * 0.3,
                 left: 0,
@@ -28,7 +27,7 @@ class UserPage extends StatelessWidget {
                   alignment: Alignment.center,
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width * 0.8,
-                    height: MediaQuery.of(context).size.height * 0.4,
+                    height: MediaQuery.of(context).size.height * 0.5,
                     child: UIHelper.cardHelper(
                       elevation: 0.5,
                       colors: AppColors.white.withOpacity(0.5),

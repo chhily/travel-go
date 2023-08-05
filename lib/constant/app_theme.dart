@@ -52,7 +52,7 @@ class AppTheme {
           ),
         ),
         useMaterial3: true,
-        splashFactory: InkSparkle.splashFactory,
+        splashFactory:  InkSparkle.splashFactory,
         splashColor: AppColors.secondary.withOpacity(0.1),
         colorScheme: ColorScheme.fromSwatch().copyWith(
             onBackground: AppColors.white,

@@ -5,6 +5,7 @@ import 'package:travel_go/constant/app_size.dart';
 import 'package:travel_go/util/app_helper.dart';
 
 import '../constant/app_color.dart';
+import '../constant/app_spacing.dart';
 
 class UIHelper {
   UIHelper._();
@@ -117,6 +118,8 @@ class UIHelper {
       BorderRadiusGeometry? borderRadius}) {
     return CachedNetworkImage(
       imageUrl: image,
+      width: width,
+      height: height,
       imageBuilder: (context, imageProvider) {
         return Container(
           width: width,
@@ -148,21 +151,29 @@ class UIHelper {
           ),
         );
       },
-      errorWidget: (context, url, error) => const Icon(Icons.error, size: 40),
+      errorWidget: (context, url, error) => Container(
+          width: width,
+          height: height,
+          decoration: BoxDecoration(
+              color: AppColors.contentColor.withOpacity(0.5),
+              borderRadius: borderRadius ?? AppRadius.regular),
+          child: const Icon(Icons.error, size: 40)),
     );
   }
 
   static loadingDialogHelper(BuildContext context) {
     showDialog(
       barrierDismissible: false,
+      useSafeArea: false,
       context: context,
       builder: (context) {
         return WillPopScope(
           onWillPop: () async => false,
           child: const Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(0))),
             insetPadding: EdgeInsets.zero,
-            backgroundColor: Colors.black45,
-            clipBehavior: Clip.antiAlias,
+            backgroundColor: Colors.black12,
             child: Center(
               child: SizedBox(
                 height: 12,
@@ -179,9 +190,30 @@ class UIHelper {
     );
   }
 
+  static snackBarHelper({required BuildContext context, String? snackMessage}) {
+    final snackBar = SnackBar(
+      backgroundColor: AppColors.primary,
+      // behavior: SnackBarBehavior.floating,
+      content: Row(
+        children: [
+          const Icon(
+            FontAwesomeIcons.info,
+            color: AppColors.white,
+          ),
+          HorizontalSpacing.regular,
+          textHelper(
+            text: snackMessage ?? "Yay!",
+            textColor: AppColors.white,
+          ),
+        ],
+      ),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
   static OutlinedButton outlineButton(
       {required void Function()? onPressed,
-      required String buttonText,
+      String? buttonText,
       Widget? childWidget,
       Color? buttonColor,
       Color? foregroundColor,
@@ -197,8 +229,32 @@ class UIHelper {
           shape: shape),
       child: childWidget ??
           Container(
-            child: textHelper(text: buttonText),
+            child: textHelper(text: buttonText ?? ""),
           ),
+    );
+  }
+
+  static ElevatedButton buttonHelper(
+      {required void Function()? onPressed,
+      required String buttonText,
+      FontWeight? fontWeight,
+      Color? textColor,
+      Color? buttonColor,
+      Size? minimumSize,
+      double? textSize,
+      OutlinedBorder? shape}) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+          minimumSize: minimumSize,
+          elevation: 0,
+          backgroundColor: buttonColor,
+          shape: shape),
+      child: Text(buttonText,
+          style: TextStyle(
+              fontWeight: fontWeight ?? FontWeight.bold,
+              color: textColor,
+              fontSize: textSize ?? FontSize.fontSizeRegular)),
     );
   }
 }
