@@ -39,21 +39,21 @@ class UserProfileWidget extends StatelessWidget {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    CircleAvatar(
-                      backgroundColor: AppColors.primary,
-                      child: IconButton(
-                        padding: EdgeInsets.zero,
-                        onPressed: () {},
-                        icon: const Icon(FontAwesomeIcons.message,
-                            color: AppColors.white, size: 16),
-                      ),
-                    ),
-                    HorizontalSpacing.regular,
+                    // CircleAvatar(
+                    //   backgroundColor: AppColors.primary,
+                    //   child: IconButton(
+                    //     padding: EdgeInsets.zero,
+                    //     onPressed: () {},
+                    //     icon: const Icon(FontAwesomeIcons.message,
+                    //         color: AppColors.white, size: 16),
+                    //   ),
+                    // ),
+                    // HorizontalSpacing.regular,
                     UIHelper.outlineButton(
                         onPressed: () {},
-                        buttonText: "Edit",
-                        textColor: AppColors.white,
-                        buttonColor: AppColors.primary)
+                        buttonText: "Edit profile",
+                        textColor: AppColors.primary,
+                        side: const BorderSide(color: AppColors.primary))
                   ],
                 )
               ],

@@ -67,13 +67,14 @@ class UIHelper {
   }
 
   static Widget imageAvatarHelper(String imageUrl,
-      {double? width, double? height}) {
+      {double? width, double? height, double? radius}) {
     return CachedNetworkImage(
       imageUrl: imageUrl,
       width: width ?? 50,
       height: height ?? 50,
       imageBuilder: (context, imageProvider) {
         return CircleAvatar(
+          radius: radius,
           backgroundColor: AppColors.contentColor,
           backgroundImage: imageProvider,
         );

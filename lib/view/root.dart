@@ -8,6 +8,7 @@ import 'package:travel_go/view/notification/notification_page.dart';
 import 'package:travel_go/view/user/user_page.dart';
 import 'package:travel_go/widget/bottom_bar.dart';
 
+import 'content/content_page.dart';
 import 'explore/explore_page.dart';
 
 class TravelGoRoot extends StatefulWidget {
@@ -26,11 +27,13 @@ class TravelGoRootState extends State<TravelGoRoot>
     AppColors.white,
     AppColors.white,
     AppColors.white,
+    AppColors.white,
   ];
 
   final List<IconData> icons = [
     FontAwesomeIcons.house,
     FontAwesomeIcons.solidCompass,
+    FontAwesomeIcons.signsPost,
     FontAwesomeIcons.solidBell,
     FontAwesomeIcons.solidUser,
   ];
@@ -87,6 +90,7 @@ class TravelGoRootState extends State<TravelGoRoot>
             children: const [
               SafeArea(child: HomePage()),
               SearchPage(),
+              ContentPage(),
               SafeArea(child: NotificationPage()),
               UserPage(),
             ],

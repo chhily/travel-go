@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:travel_go/constant/app_color.dart';
 import 'package:travel_go/constant/app_spacing.dart';
 import 'package:travel_go/mock/mock_data.dart';
 import 'package:travel_go/util/ui_helper.dart';
@@ -18,16 +19,12 @@ class FollowByWidget extends StatelessWidget {
               Align(
                 widthFactor: 0.5,
                 child: CircleAvatar(
-                  radius: 18,
-                  backgroundColor: Colors.white,
-                  child: CircleAvatar(
-                    radius: 16,
-                    backgroundImage: NetworkImage(
-                      MockData.countryImgUrl[i],
-                    ),
-                  ),
+                  radius: 17,
+                  backgroundColor: AppColors.secondary,
+                  child: UIHelper.imageAvatarHelper(MockData.countryImgUrl[i],
+                      width: 32, height: 32, radius: 16),
                 ),
-              )
+              ),
           ],
         ),
         HorizontalSpacing.big,
