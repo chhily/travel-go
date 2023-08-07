@@ -9,6 +9,7 @@ import 'package:travel_go/view/home/widget/choice_chip.dart';
 import 'package:travel_go/view/home/widget/header.dart';
 import 'package:travel_go/view/home/widget/highlight_card.dart';
 
+import '../../widget/bottom_bar.dart';
 import 'widget/category_highlight.dart';
 
 class HomePage extends StatefulWidget {
@@ -90,6 +91,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return ListView(
+      controller: InheritedDataProvider.of(context).scrollController,
       padding: AppGap.regularGap,
       children: [
         HomeHeaderWidget(

@@ -22,6 +22,25 @@ class AppTheme {
             shape: RoundedRectangleBorder(borderRadius: AppRadius.regular),
           ),
         ),
+        outlinedButtonTheme: OutlinedButtonThemeData(
+          style: OutlinedButton.styleFrom(
+            textStyle: GoogleFonts.openSans(
+              fontSize: FontSize.fontSizeRegular,
+              color: AppColors.primary,
+            ),
+          ),
+        ),
+        textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(
+            textStyle: GoogleFonts.openSans(
+              fontSize: FontSize.fontSizeRegular,
+              color: AppColors.secondary,
+            ),
+            padding: EdgeInsets.zero,
+            shape: RoundedRectangleBorder(borderRadius: AppRadius.regular),
+            foregroundColor: AppColors.secondary,
+          ),
+        ),
         iconTheme: const IconThemeData(
           color: AppColors.primary,
         ),
@@ -52,7 +71,7 @@ class AppTheme {
           ),
         ),
         useMaterial3: true,
-        splashFactory:  InkSparkle.splashFactory,
+        splashFactory: InkSparkle.splashFactory,
         splashColor: AppColors.secondary.withOpacity(0.1),
         colorScheme: ColorScheme.fromSwatch().copyWith(
             onBackground: AppColors.white,

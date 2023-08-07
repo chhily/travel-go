@@ -6,6 +6,8 @@ import 'package:travel_go/constant/app_spacing.dart';
 import 'package:travel_go/util/app_helper.dart';
 import 'package:travel_go/util/ui_helper.dart';
 
+import '../../../widget/bottom_bar.dart';
+
 class NotificationListWidget extends StatelessWidget {
   const NotificationListWidget({super.key});
 
@@ -13,6 +15,7 @@ class NotificationListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.separated(
         padding: EdgeInsets.zero,
+        controller: InheritedDataProvider.of(context).scrollController,
         itemBuilder: (context, index) => itemNotification(
               title: AppHelper.generateRandomString(12),
               dateTime: AppHelper.generateRandomDateTime(

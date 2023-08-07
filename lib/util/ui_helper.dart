@@ -217,7 +217,9 @@ class UIHelper {
       Widget? childWidget,
       Color? buttonColor,
       Color? foregroundColor,
+      Color? textColor,
       BorderSide? side,
+      double? fontSize,
       OutlinedBorder? shape}) {
     return OutlinedButton(
       onPressed: onPressed,
@@ -228,9 +230,23 @@ class UIHelper {
           side: side,
           shape: shape),
       child: childWidget ??
-          Container(
-            child: textHelper(text: buttonText ?? ""),
-          ),
+          textHelper(
+              text: buttonText ?? "",
+              textColor: textColor,
+              fontSize: fontSize,
+              fontWeight: FontWeight.bold),
+    );
+  }
+
+  static Widget linkButtonHelper(
+      {Widget? child, String? text, double? fontSize}) {
+    return InkWell(
+      onTap: () {},
+      child: child ??
+          textHelper(
+              text: text ?? "N/A",
+              fontSize: fontSize,
+              textColor: AppColors.secondary),
     );
   }
 

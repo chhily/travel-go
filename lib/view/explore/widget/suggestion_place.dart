@@ -7,6 +7,7 @@ import 'package:travel_go/util/app_helper.dart';
 import 'package:travel_go/util/ui_helper.dart';
 
 import '../../../constant/app_color.dart';
+import '../../../widget/bottom_bar.dart';
 
 class SuggestionPlaceWidget extends StatelessWidget {
   const SuggestionPlaceWidget({super.key});
@@ -15,6 +16,7 @@ class SuggestionPlaceWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.separated(
         padding: EdgeInsets.zero,
+        controller: InheritedDataProvider.of(context).scrollController,
         itemBuilder: (context, index) {
           return suggestionItem(
               title: MockData.country[index],

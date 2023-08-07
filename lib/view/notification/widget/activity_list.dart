@@ -6,6 +6,8 @@ import 'package:travel_go/constant/app_spacing.dart';
 import 'package:travel_go/util/app_helper.dart';
 import 'package:travel_go/util/ui_helper.dart';
 
+import '../../../widget/bottom_bar.dart';
+
 class ActivityListWidget extends StatelessWidget {
   const ActivityListWidget({super.key});
 
@@ -13,6 +15,7 @@ class ActivityListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.separated(
         padding: EdgeInsets.zero,
+        controller: InheritedDataProvider.of(context).scrollController,
         itemBuilder: (context, index) => itemActivity(
               title: AppHelper.generateRandomString(6),
               dateTime: AppHelper.generateRandomDateTime(

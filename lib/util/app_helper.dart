@@ -32,6 +32,17 @@ class AppHelper {
     return result;
   }
 
+  static String dateFormatter({DateTime? dateTime}) {
+    if (dateTime == null) return "N/A";
+    final result = DateFormat('dd MMM yyyy').format(dateTime.toLocal());
+    return result;
+  }
+
+  static String formatNumber({num? number}) {
+    if (number == null) return "N/A";
+    return NumberFormat.compact().format(number);
+  }
+
   static DateTime generateRandomDateTime(
       DateTime startDateTime, DateTime endDateTime) {
     Random random = Random();

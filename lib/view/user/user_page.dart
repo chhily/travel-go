@@ -1,71 +1,48 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:travel_go/constant/app_size.dart';
 import 'package:travel_go/constant/app_spacing.dart';
 import 'package:travel_go/util/ui_helper.dart';
-import 'package:travel_go/view/user/widget/menu.dart';
+import 'package:travel_go/view/user/widget/follow_by.dart';
+import 'package:travel_go/view/user/widget/follower_following.dart';
+import 'package:travel_go/view/user/widget/user_description.dart';
+import 'package:travel_go/view/user/widget/user_profile.dart';
+import 'package:travel_go/view/user/widget/user_time_line.dart';
 
-import '../../constant/app_color.dart';
+import '../../widget/bottom_bar.dart';
 
 class UserPage extends StatelessWidget {
   const UserPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Expanded(
-          child: Stack(
-            children: [
-              // buildProfileImg(context: context, imgUrl: MockData.userCoverImg),
-              Positioned(
-                top: MediaQuery.of(context).size.height * 0.3,
-                left: 0,
-                right: 0,
-                child: Align(
-                  alignment: Alignment.center,
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.8,
-                    height: MediaQuery.of(context).size.height * 0.5,
-                    child: UIHelper.cardHelper(
-                      elevation: 0.5,
-                      colors: AppColors.white.withOpacity(0.5),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          VerticalSpacing.regular,
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              UIHelper.textHelper(
-                                  text: "Bessie Cooper",
-                                  fontSize: FontSize.fontSizeTitle,
-                                  fontWeight: FontWeight.bold),
-                              HorizontalSpacing.medium,
-                              const Icon(
-                                FontAwesomeIcons.circleCheck,
-                                color: AppColors.secondary,
-                                size: 16,
-                              )
-                            ],
-                          ),
-                          const Expanded(
-                            child: UserMenuWidget(),
-                          ),
-                          UIHelper.textHelper(text: "Version 1.0.0"),
-                          VerticalSpacing.regular,
-                        ],
-                      ),
-                    ),
-                  ),
+    return  SingleChildScrollView(
+      controller: InheritedDataProvider.of(context).scrollController,
+      child:  SizedBox(
+        height: MediaQuery.of(context).size.height,
+        child: const Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            UserProfileWidget(),
+            Expanded(
+              child: Padding(
+                padding: AppGap.regularGap,
+                child: Column(
+                  children: [
+                    UserDescriptionWidget(),
+                    VerticalSpacing.medium,
+                    FollowerAndFollowingWidget(),
+                    VerticalSpacing.medium,
+                    FollowByWidget(),
+                    VerticalSpacing.regular,
+                    Expanded(child: UserTimeLineWidget()),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 
