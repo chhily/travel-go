@@ -23,10 +23,10 @@ class UIHelper {
       textAlign: textAlign,
       maxLines: maxLines,
       style: TextStyle(
-        fontWeight: fontWeight ?? FontWeight.normal,
-        fontSize: fontSize ?? FontSize.fontSizeRegular,
-        color: textColor ?? AppColors.primary,
-      ),
+          fontWeight: fontWeight ?? FontWeight.normal,
+          fontSize: fontSize ?? FontSize.fontSizeRegular,
+          color: textColor ?? AppColors.primary,
+          overflow: TextOverflow.ellipsis),
     );
   }
 
@@ -123,8 +123,10 @@ class UIHelper {
       height: height,
       imageBuilder: (context, imageProvider) {
         return Container(
-          width: width,
-          height: height,
+          constraints: BoxConstraints(
+            maxHeight: height ?? double.infinity,
+            maxWidth: width ?? double.infinity,
+          ),
           decoration: BoxDecoration(
             color: colorDecoration,
             borderRadius: borderRadius ?? AppRadius.regular,

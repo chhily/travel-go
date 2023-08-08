@@ -14,35 +14,28 @@ class UserPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  SingleChildScrollView(
+    return ListView(
       controller: InheritedDataProvider.of(context).scrollController,
-      child:  SizedBox(
-        height: MediaQuery.of(context).size.height,
-        child: const Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            UserProfileWidget(),
-            Expanded(
-              child: Padding(
-                padding: AppGap.regularGap,
-                child: Column(
-                  children: [
-                    UserDescriptionWidget(),
-                    VerticalSpacing.medium,
-                    FollowerAndFollowingWidget(),
-                    VerticalSpacing.medium,
-                    FollowByWidget(),
-                    VerticalSpacing.regular,
-                    Expanded(child: UserTimeLineWidget()),
-                  ],
-                ),
-              ),
-            ),
-          ],
+      padding: EdgeInsets.zero,
+      children: const [
+        UserProfileWidget(),
+        Padding(
+          padding: AppGap.regularGap,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              UserDescriptionWidget(),
+              VerticalSpacing.medium,
+              FollowerAndFollowingWidget(),
+              VerticalSpacing.medium,
+              FollowByWidget(),
+              VerticalSpacing.regular,
+            ],
+          ),
         ),
-      ),
+        UserTimeLineWidget(),
+        SizedBox(height: 100)
+      ],
     );
   }
 

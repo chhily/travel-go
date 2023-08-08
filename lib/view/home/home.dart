@@ -119,6 +119,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         ),
         VerticalSpacing.big,
         CategoryHighlightWidget(itemList: itemValue),
+        const SizedBox(height: 100)
       ],
     );
   }

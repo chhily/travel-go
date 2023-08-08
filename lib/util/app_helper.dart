@@ -15,13 +15,13 @@ class AppHelper {
     return numberFormat.format(price);
   }
 
-  static num generateRandomNumber() {
+  static num generateRandomNumber({int? maxNum}) {
     Random random = Random();
 
     num number = 0;
 
     for (int i = 0; i < 50; i++) {
-      number += random.nextInt(9);
+      number += random.nextInt(maxNum ?? 9);
     }
     return number;
   }
