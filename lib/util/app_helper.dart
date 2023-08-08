@@ -65,4 +65,8 @@ class AppHelper {
     }
     return words.join(", ");
   }
+
+  static String svgHelper(String svg) {
+    return "assets/svg/$svg.svg";
+  }
 }

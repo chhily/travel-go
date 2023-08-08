@@ -22,7 +22,7 @@ class FollowByWidget extends StatelessWidget {
                   radius: 17,
                   backgroundColor: AppColors.secondary,
                   child: UIHelper.imageAvatarHelper(MockData.countryImgUrl[i],
-                      width: 32, height: 32, radius: 16),
+                     size: 32, radius: 16),
                 ),
               ),
           ],

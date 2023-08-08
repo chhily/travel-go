@@ -33,7 +33,7 @@ class UserProfileWidget extends StatelessWidget {
                       borderRadius: BorderRadius.circular(50),
                       border: Border.all(color: AppColors.white, width: 4)),
                   child: UIHelper.imageAvatarHelper(MockData.userCoverImg,
-                      width: 75, height: 75),
+                     size: 75),
                 ),
                 const Spacer(),
                 Row(

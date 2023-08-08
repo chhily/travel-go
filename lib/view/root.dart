@@ -90,7 +90,7 @@ class TravelGoRootState extends State<TravelGoRoot>
             children: const [
               SafeArea(child: HomePage()),
               SearchPage(),
-              ContentPage(),
+              SafeArea(child: ContentPage()),
               SafeArea(child: NotificationPage()),
               UserPage(),
             ],
