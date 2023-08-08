@@ -17,8 +17,8 @@ This is a Flutter application that uses Material 3 to create a Travel applicatio
 
 # Logo
 
-<img src="assets/images/logo.jpg" width="300" height="auto" align="center">
-<img src="assets/images/logo_banner.jpg" width="300" height="auto" align="center">
+<img src="assets/images/logo.png" width="300" height="auto" align="center">
+<img src="assets/images/logo_banner.png" width="300" height="auto" align="center">
 
 # Screenshot
 
