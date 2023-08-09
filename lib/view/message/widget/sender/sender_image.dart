@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:travel_go/constant/app_url.dart';
+import 'package:travel_go/constant/app_size.dart';
+import 'package:travel_go/widget/image_helper.dart';
 import 'package:travel_go/widget/image_viewer.dart';
 
-import '../../../constant/app_size.dart';
-import '../../../widget/image_helper.dart';
 
-class ReceiverImageWidget extends StatelessWidget {
+class SenderImageWidget extends StatelessWidget {
   final String imageUrl;
-  const ReceiverImageWidget({super.key, required this.imageUrl});
+  const SenderImageWidget({super.key, required this.imageUrl});
 
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: Alignment.centerLeft,
+      alignment: Alignment.centerRight,
       child: GestureDetector(
         onTap: () {
           Navigator.push(context, MaterialPageRoute(

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:travel_go/constant/message_type.dart';
 import 'package:travel_go/model/message/personal_message.dart';
-import 'package:travel_go/view/message/widget/receiver_image.dart';
-import 'package:travel_go/view/message/widget/receiver_message.dart';
-import 'package:travel_go/view/message/widget/sender_image.dart';
-import 'package:travel_go/view/message/widget/sender_message.dart';
+import 'package:travel_go/view/message/widget/receiver/receiver_image.dart';
+import 'package:travel_go/view/message/widget/receiver/receiver_message.dart';
+import 'package:travel_go/view/message/widget/sender/sender_image.dart';
+import 'package:travel_go/view/message/widget/sender/sender_message.dart';
+
 
 class ValidatedMessageTypeWidget extends StatelessWidget {
   final PersonalMessageModel? personalMessageModel;

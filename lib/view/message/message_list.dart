@@ -3,9 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:travel_go/constant/app_spacing.dart';
 import 'package:travel_go/provider/message/message_handler.dart';
 import 'package:travel_go/socket/socket_service.dart';
-import 'package:travel_go/util/ui_helper.dart';
-import 'package:travel_go/view/message/widget/receiver_message.dart';
-import 'package:travel_go/view/message/widget/sender_message.dart';
 import 'package:travel_go/view/message/widget/validate_message_type.dart';
 import 'package:travel_go/widget/loading_helper.dart';
 

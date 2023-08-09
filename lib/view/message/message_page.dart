@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:travel_go/model/message/personal_message.dart';
+import 'package:travel_go/constant/app_color.dart';
 import 'package:travel_go/model/message/receiver_model.dart';
 import 'package:travel_go/provider/message/message_handler.dart';
-import 'package:travel_go/socket/socket_service.dart';
-import 'package:travel_go/util/ui_helper.dart';
+import 'package:travel_go/view/message/message_list.dart';
+import 'package:travel_go/view/message/utility/sender_action.dart';
 import 'package:travel_go/view/message/widget/message_appbar.dart';
-import 'package:travel_go/view/message/widget/message_list.dart';
 import 'package:travel_go/widget/loading_helper.dart';
 
 class MessagePage extends StatefulWidget {
@@ -46,11 +45,20 @@ class _MessagePageState extends State<MessagePage> {
         if (snapshot.data == null) {
           return const Loadinghelper();
         } else {
-          return Scaffold(
-              appBar: MessageAppBar(
-                  imgUrl: messageHandler.receiverInfo?.photoUrl ?? " ",
-                  username: messageHandler.receiverInfo?.firstName ?? "N/A"),
-              body: const MessageListWidget());
+          return GestureDetector(
+            onTap: () => FocusScope.of(context).unfocus(),
+            child: Scaffold(
+                backgroundColor: AppColors.white,
+                appBar: MessageAppBar(
+                    imgUrl: messageHandler.receiverInfo?.photoUrl ?? " ",
+                    username: messageHandler.receiverInfo?.firstName ?? "N/A"),
+                body: const Column(
+                  children: [
+                    Expanded(child: MessageListWidget()),
+                    SenderActionWidget(),
+                  ],
+                )),
+          );
         }
       },
     );
