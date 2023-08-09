@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:travel_go/model/message/personal_message.dart';
 import 'package:travel_go/model/message/receiver_model.dart';
 
@@ -9,10 +8,6 @@ class MessageHandler with ChangeNotifier {
   List<PersonalMessageModel> _personalMessageList = [];
 
   List<PersonalMessageModel> get personalMessageList => _personalMessageList;
-
-  static MessageHandler getMessageHandler(BuildContext context,
-          [bool listen = false]) =>
-      Provider.of<MessageHandler>(context, listen: listen);
 
   ReceiverModel? _receiverModel;
 

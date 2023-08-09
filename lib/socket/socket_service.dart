@@ -93,7 +93,7 @@ class SocketService {
      */
     socket.emit(SocketRoute.pubChatById, {
       "chat_id": chatId,
-      "per_page": 5,
+      "per_page": 100,
       "page_number": 1,
       "order_by": "DESC",
     });

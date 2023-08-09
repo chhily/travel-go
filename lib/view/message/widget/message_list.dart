@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:travel_go/constant/app_spacing.dart';
 import 'package:travel_go/provider/message/message_handler.dart';
 import 'package:travel_go/socket/socket_service.dart';
 import 'package:travel_go/util/ui_helper.dart';
+import 'package:travel_go/view/message/widget/receiver_message.dart';
+import 'package:travel_go/view/message/widget/sender_message.dart';
+import 'package:travel_go/view/message/widget/validate_message_type.dart';
+import 'package:travel_go/widget/loading_helper.dart';
 
 class MessageListWidget extends StatefulWidget {
   const MessageListWidget({super.key});
@@ -17,6 +22,11 @@ class _MessageListWidgetState extends State<MessageListWidget> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    onInitSocket();
+  }
+
+  onInitSocket() {
+    Provider.of<MessageHandler>(context, listen: false);
     socketService = SocketService();
     socketService.initSocket();
     onGetChatByID("645efa30d13e4f5bb4e76426");
@@ -42,16 +52,22 @@ class _MessageListWidgetState extends State<MessageListWidget> {
     return Consumer<MessageHandler>(
       builder: (context, value, child) {
         final messageValue = value.personalMessageList;
-        return ListView(
-          reverse: true,
-          children: List.generate(messageValue.length, (index) {
-            return Container(
-              color: Colors.red,
-              child: UIHelper.textHelper(
-                  text: messageValue[index].message ?? "N/A"),
-            );
-          }),
-        );
+        if (messageValue.isEmpty) {
+          return const Loadinghelper();
+        } else {
+          return ListView.separated(
+            reverse: true,
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+            itemBuilder: (context, index) {
+              final itemValue = messageValue.elementAt(index);
+              return ValidatedMessageTypeWidget(
+                personalMessageModel: itemValue,
+              );
+            },
+            itemCount: messageValue.length,
+            separatorBuilder: (context, index) => VerticalSpacing.big,
+          );
+        }
       },
     );
   }
