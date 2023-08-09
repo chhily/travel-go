@@ -24,6 +24,15 @@ class MessageHandler with ChangeNotifier {
     return _receiverModel;
   }
 
+  bool loading = false;
+  void onInitPage() {
+    if (_personalMessageList.isNotEmpty && _receiverModel != null) {
+      loading = true;
+    } else {
+      loading = false;
+    }
+  }
+
   onInitPersonalMessageList(List<PersonalMessageModel>? value) {
     if (value == null) return;
     _personalMessageList = value;

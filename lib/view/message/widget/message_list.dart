@@ -13,7 +13,6 @@ class MessageListWidget extends StatefulWidget {
 
 class _MessageListWidgetState extends State<MessageListWidget> {
   late SocketService socketService;
-
   @override
   void initState() {
     // TODO: implement initState
@@ -34,6 +33,7 @@ class _MessageListWidgetState extends State<MessageListWidget> {
   @override
   void dispose() {
     // TODO: implement dispose
+    socketService.onDisposeListener();
     super.dispose();
   }
 

@@ -19,12 +19,13 @@ class _MessagePageState extends State<MessagePage> {
     super.initState();
     messageHandler = Provider.of<MessageHandler>(context, listen: false);
     messageHandler.onGetReceiverInfo();
+    messageHandler.onInitPage();
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
-    messageHandler.dispose();
+    // messageHandler.dispose();
     super.dispose();
   }
 

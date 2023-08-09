@@ -78,10 +78,11 @@ class SocketService {
   }
 
   void onDisposeListener() {
-    socket.offAny(
-      (event, data) =>
-          debugPrint("dispose any action => $event ${data.toString()}"),
-    );
+    socket.disconnected;
+    socket.close();
+    socket.clearListeners();
+    socket.destroy();
+    socket.dispose();
   }
 
   // emit to get user chat value ({send chat})
