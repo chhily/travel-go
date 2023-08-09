@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:travel_go/constant/app_theme.dart';
+import 'package:travel_go/provider/message/message_handler.dart';
 import 'package:travel_go/view/root.dart';
 
 void main() {
@@ -13,13 +15,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    return MaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.theme(textTheme),
-      home: GestureDetector(
-          onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-          child: const TravelGoRoot()),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => MessageHandler()),
+      ],
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.theme(textTheme),
+        home: GestureDetector(
+            onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+            child: const TravelGoRoot()),
+      ),
     );
   }
 }
