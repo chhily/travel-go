@@ -115,7 +115,6 @@ class SocketService {
   Future<void> onReceiveChatUserToUser(
       {required String chatId, required BuildContext context}) async {
     final messageHandler = Provider.of<MessageHandler>(context, listen: false);
-    messageHandler.onChangeLoading(true);
     socket.on("${SocketRoute.onGetChatById}/$chatId", (jsonValue) async {
       /** event handle
        * * this event is to handle data from socket
@@ -126,7 +125,6 @@ class SocketService {
       await onReceiveLiveMessage(jsonValue)
           .then((value) => messageHandler.onUpdateLiveMessage(value));
     });
-    messageHandler.onChangeLoading(false);
   }
 
   Future<PersonalMessageListModel?> onReceiveAllMessage(
@@ -213,7 +211,7 @@ class SocketService {
 
   void onDisposeListener() {
     socket.disconnected;
-    socket.close();
+    // socket.close();
     socket.clearListeners();
     socket.destroy();
     socket.dispose();

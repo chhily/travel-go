@@ -11,6 +11,8 @@ class SenderTextFieldWidget extends StatelessWidget {
     return TextFormField(
       controller: textEditingController,
       textAlign: TextAlign.start,
+      minLines: 1,
+      maxLines: 7,
       decoration: InputDecoration(
           contentPadding: const EdgeInsets.symmetric(horizontal: 16),
           focusedBorder: OutlineInputBorder(

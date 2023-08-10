@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:travel_go/constant/app_url.dart';
 import 'package:travel_go/constant/message_type.dart';
 import 'package:travel_go/model/message/personal_message.dart';
+import 'package:travel_go/view/message/utility/widget/bottom_sheet.dart';
 import 'package:travel_go/view/message/widget/receiver/receiver_image.dart';
 import 'package:travel_go/view/message/widget/receiver/receiver_message.dart';
 import 'package:travel_go/view/message/widget/sender/sender_image.dart';
@@ -16,16 +17,26 @@ class ValidatedMessageTypeWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (personalMessageModel?.senderId == "6359fb7d96cd484ba17e54f7") {
-      return buildSenderWidget();
+    if (personalMessageModel?.senderId == AppUrl.senderId) {
+      return buildSenderWidget(context);
     } else {
       return buildReceiverWidget();
     }
   }
 
-  Widget buildSenderWidget() {
+  Widget buildSenderWidget(BuildContext context) {
     if (personalMessageModel?.type == MessageType.textType) {
-      return SenderMessageWidget(message: personalMessageModel?.message ?? "");
+      return GestureDetector(
+          onLongPress: () {
+            showModalBottomSheet<void>(
+              context: context,
+              builder: (context) {
+                return const ActionSheet();
+              },
+            );
+          },
+          child: SenderMessageWidget(
+              message: personalMessageModel?.message ?? ""));
     } else if (personalMessageModel?.type == MessageType.photoType) {
       return SenderImageWidget(imageUrl: personalMessageModel?.photoUrl ?? "");
     } else if (personalMessageModel?.type == MessageType.voiceType) {

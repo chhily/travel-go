@@ -27,7 +27,10 @@ class _AudioPlayerMessageState extends State<AudioPlayerMessage>
   void initState() {
     // TODO: implement initState
     super.initState();
+    onInit();
+  }
 
+  onInit() {
     futureDuration = _audioPlayer
         .setAudioSource(AudioSource.uri(Uri.parse(widget.audioSource)));
     void playerStateListener(PlayerState state) async {
@@ -157,19 +160,29 @@ class _AudioPlayerMessageState extends State<AudioPlayerMessage>
       stream: _audioPlayer.positionStream,
       builder: (context, snapshot) {
         if (snapshot.hasData && duration != null) {
-          return CupertinoSlider(
-            activeColor: AppColors.secondary,
-            min: 0,
-            max: snapshot.data!.inMicroseconds ~/ duration.inMicroseconds < 1
-                ? 1
-                : snapshot.data!.inMicroseconds / duration.inMicroseconds,
-            value: snapshot.data!.inMicroseconds / duration.inMicroseconds,
-            onChanged: (value) {
-              // if (value >= 0.0 && value <= 1.0) {
-              _audioPlayer.seek(duration * value);
-              // }
-              // _audioPlayer.seek(duration * value);
-            },
+          return SliderTheme(
+            data: SliderTheme.of(context).copyWith(
+              activeTrackColor: AppColors.secondary,
+              inactiveTrackColor: AppColors.white,
+              trackShape: const RectangularSliderTrackShape(),
+              trackHeight: 4.0,
+              thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6.0),
+              overlayShape: const RoundSliderOverlayShape(overlayRadius: 6.0),
+            ),
+            child: Slider(
+              activeColor: AppColors.secondary,
+              min: 0,
+              max: snapshot.data!.inMicroseconds ~/ duration.inMicroseconds < 1
+                  ? 1
+                  : snapshot.data!.inMicroseconds / duration.inMicroseconds,
+              value: snapshot.data!.inMicroseconds / duration.inMicroseconds,
+              onChanged: (value) {
+                // if (value >= 0.0 && value <= 1.0) {
+                _audioPlayer.seek(duration * value);
+                // }
+                // _audioPlayer.seek(duration * value);
+              },
+            ),
           );
         } else {
           return const SizedBox.shrink();

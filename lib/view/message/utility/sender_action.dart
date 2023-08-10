@@ -7,12 +7,12 @@ import 'package:travel_go/view/message/utility/widget/sender_text_field.dart';
 class SenderActionWidget extends StatelessWidget {
   final TextEditingController textEditingController;
   final void Function()? onSendMessage;
-  const SenderActionWidget({super.key, required this.textEditingController, this.onSendMessage});
+  const SenderActionWidget(
+      {super.key, required this.textEditingController, this.onSendMessage});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 50,
       padding: AppGap.smallGap,
       color: AppColors.shadeWhite,
       child: Row(

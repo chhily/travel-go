@@ -23,11 +23,12 @@ class SenderMessageWidget extends StatelessWidget {
           ),
           color: AppColors.primary,
         ),
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
         child: UIHelper.textHelper(
-            text: message,
-            textColor: AppColors.white,
-            textAlign: TextAlign.right),
+          text: message,
+          textColor: AppColors.white,
+          maxLines: message.length,
+        ),
       ),
     );
   }

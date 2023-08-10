@@ -25,24 +25,16 @@ class _MessageListWidgetState extends State<MessageListWidget> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    onInitSocket();
     messageHandler = Provider.of<MessageHandler>(context, listen: false);
+    onInitSocket();
   }
 
   onInitSocket() {
     Provider.of<MessageHandler>(context, listen: false);
     socketService = SocketService();
     socketService.initSocket();
-    onGetChatByID(AppUrl.chatId);
-  }
-
-  Future<void> onGetChatByID(String chatId) async {
-    await socketService
-        .onEmitMessage(chatId: chatId, pageKey: pageKey)
-        .then((value) async {
-      await socketService.onReceiveChatUserToUser(
-          context: context, chatId: chatId);
-    });
+    messageHandler.onGetChatByID(
+        chatId: AppUrl.chatId, context: context, pageKey: pageKey);
   }
 
   @override
@@ -57,7 +49,7 @@ class _MessageListWidgetState extends State<MessageListWidget> {
     return Consumer<MessageHandler>(
       builder: (context, valueNotifier, child) {
         final messageValue = valueNotifier.personalMessageList;
-        if (messageValue.isEmpty) {
+        if (valueNotifier.loading) {
           return const Loadinghelper();
         }
         return PaginationWidgetHandler(
