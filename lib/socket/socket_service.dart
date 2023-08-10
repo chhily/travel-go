@@ -77,24 +77,17 @@ class SocketService {
     log("create chat ${SocketRoute.onCreateChat}, {users: $senderId}");
   }
 
-  void onDisposeListener() {
-    socket.disconnected;
-    socket.close();
-    socket.clearListeners();
-    socket.destroy();
-    socket.dispose();
-  }
-
   // emit to get user chat value ({send chat})
-  Future<void> onSendUserToUserChat({required String chatId}) async {
+  Future<void> onEmitMessage(
+      {required String chatId, required int pageKey}) async {
     /** event handle
      * * this event is to handle send data to socket
      * ! to send from sender(yourself) -> receiver(another user)
      */
     socket.emit(SocketRoute.pubChatById, {
       "chat_id": chatId,
-      "per_page": 100,
-      "page_number": 1,
+      "per_page": 15,
+      "page_number": pageKey,
       "order_by": "DESC",
     });
     prettyPrintJson(SocketRoute.pubChatById, msg: "emit to send message");
@@ -104,20 +97,22 @@ class SocketService {
   Future<void> onReceiveChatUserToUser(
       {required String chatId, required BuildContext context}) async {
     final messageHandler = Provider.of<MessageHandler>(context, listen: false);
-    socket.on("${SocketRoute.onGetChatById}/$chatId", (jsonValue) {
+    messageHandler.onChangeLoading(true);
+    socket.on("${SocketRoute.onGetChatById}/$chatId", (jsonValue) async {
       /** event handle
        * * this event is to handle data from socket
        * ! to get data from sender(another user) -> receiver(yourself)
        */
-      onReceiveAllMessage(jsonValue).then((value) =>
-          messageHandler.onInitPersonalMessageList(value?.personalMessage));
-      onReceiveLiveMessage(jsonValue)
+      await onReceiveAllMessage(handler: jsonValue, context: context)
+          .then((value) => messageHandler.onInitPersonalMessageList(value));
+      await onReceiveLiveMessage(jsonValue)
           .then((value) => messageHandler.onUpdateLiveMessage(value));
-      onSeenMessage(jsonValue);
     });
+    messageHandler.onChangeLoading(false);
   }
 
-  Future<PersonalMessageListModel?> onReceiveAllMessage(dynamic handler) async {
+  Future<PersonalMessageListModel?> onReceiveAllMessage(
+      {dynamic handler, required BuildContext context}) async {
     /**
      * ! get all data from socket (res is list)
      */
@@ -127,6 +122,10 @@ class SocketService {
       if (handler[ResponseField.actionField] == ResponseField.actionGet) {
         final personalReceiveMessage =
             PersonalMessageListModel.fromJson(handler[ResponseField.dataField]);
+        if (personalReceiveMessage.pagination != null) {
+          Provider.of<MessageHandler>(context, listen: false)
+              .onGetPagination(personalReceiveMessage.pagination);
+        }
         prettyPrintJson(handler[ResponseField.dataField],
             msg: "all data from socket");
         return personalReceiveMessage;
@@ -192,5 +191,13 @@ class SocketService {
     prettyString
         .split('\n')
         .forEach((element) => debugPrint("$msg => $element"));
+  }
+
+  void onDisposeListener() {
+    socket.disconnected;
+    socket.close();
+    socket.clearListeners();
+    socket.destroy();
+    socket.dispose();
   }
 }

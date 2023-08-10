@@ -48,24 +48,24 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     // TODO: implement didChangeAppLifecycleState
     if (state == AppLifecycleState.resumed) {
-      handleAfterDetached();
+      // handleAfterDetached();
     }
     super.didChangeAppLifecycleState(state);
   }
 
-  void handleAfterDetached() async {
-    final permission = await geoHandler.handleLocationPermission();
-    if (!permission) {
-      if (!mounted) return;
-      UIHelper.snackBarHelper(
-          context: context, snackMessage: "Location services is disable!");
-    } else {}
-  }
+  // void handleAfterDetached() async {
+  //   final permission = await geoHandler.handleLocationPermission();
+  //   if (!permission) {
+  //     if (!mounted) return;
+  //     UIHelper.snackBarHelper(
+  //         context: context, snackMessage: "Location services is disable!");
+  //   } else {}
+  // }
 
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
-    geoHandler.onGetUserLocation();
+    // geoHandler.onGetUserLocation();
     super.didChangeDependencies();
   }
 

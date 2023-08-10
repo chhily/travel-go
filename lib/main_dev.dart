@@ -12,7 +12,7 @@ void main() {
   FlavorConfig(flavor: Flavor.dev, values: FlavorValues(appName: "DEV"));
   BaseHttpClient.init();
   runApp(const MyApp());
-  GeoHandler().handleLocationPermission();
+  // GeoHandler().handleLocationPermission();
   FlutterNativeSplash.remove();
 }
 

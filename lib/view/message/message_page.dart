@@ -25,8 +25,7 @@ class _MessagePageState extends State<MessagePage> {
   }
 
   Future<ReceiverModel?> onInitData() async {
-    final _messageHandler = Provider.of<MessageHandler>(context, listen: false);
-    final data = await _messageHandler.onGetReceiverInfo();
+    final data = await messageHandler.onGetReceiverInfo();
     return data;
   }
 
@@ -34,6 +33,7 @@ class _MessagePageState extends State<MessagePage> {
   void dispose() {
     // TODO: implement dispose
     messageHandler.onDispose();
+    // messageHandler.dispose();
     super.dispose();
   }
 

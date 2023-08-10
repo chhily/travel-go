@@ -1,13 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:travel_go/model/message/personal_message.dart';
 import 'package:travel_go/model/message/receiver_model.dart';
+import 'package:travel_go/model/pagination.dart';
 
 import '../../socket/socket_service.dart';
 
 class MessageHandler with ChangeNotifier {
+  PagingController<int, PersonalMessageModel> messagePagedController =
+      PagingController(firstPageKey: 1);
+  final SocketService _socketService = SocketService();
+
+  PersonalMessageListModel? _personalMessageListModel;
+  PersonalMessageListModel? get personalMessage => _personalMessageListModel;
+
   List<PersonalMessageModel> _personalMessageList = [];
 
   List<PersonalMessageModel> get personalMessageList => _personalMessageList;
+
+  Pagination? _messagePagination;
+
+  Pagination? get getMessagePagination => _messagePagination;
 
   ReceiverModel? _receiverModel;
 
@@ -20,17 +33,27 @@ class MessageHandler with ChangeNotifier {
   }
 
   bool loading = false;
-  void onInitPage() {
-    if (_personalMessageList.isNotEmpty && _receiverModel != null) {
-      loading = true;
-    } else {
-      loading = false;
-    }
+
+  onChangeLoading(bool value) => loading = value;
+
+  onGetPagination(Pagination? value) {
+    _messagePagination = value;
+    notifyListeners();
   }
 
-  onInitPersonalMessageList(List<PersonalMessageModel>? value) {
+  onClearPagination() {
+    _messagePagination = null;
+  }
+
+  onInitPersonalMessageList(PersonalMessageListModel? value) {
     if (value == null) return;
-    _personalMessageList = value;
+    _personalMessageList.addAll(
+      value.personalMessage.where(
+        (firstValue) => _personalMessageList
+            .every((secondValue) => firstValue.id != secondValue.id),
+      ),
+    );
+    _personalMessageListModel = value;
     notifyListeners();
   }
 
