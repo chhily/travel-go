@@ -77,6 +77,15 @@ class SocketService {
     log("create chat ${SocketRoute.onCreateChat}, {users: $senderId}");
   }
 
+  Future<void> onEmitEditTextMessage(
+      {required String chatId,
+      required String messageId,
+      required String textMessage}) async {
+    socket.emit(SocketRoute.pubChatEdit,
+        {"chat_id": chatId, "message_id": messageId, "message": textMessage});
+    log("pubEditChatById ${SocketRoute.pubChatEdit}, {chat_id: $chatId, message_id: $messageId, message: $textMessage}");
+  }
+
   Future<void> pubSendChatNew(
       {required String chatId,
       String? message,

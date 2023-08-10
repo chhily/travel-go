@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:travel_go/constant/app_size.dart';
 
 class BottomBar extends StatefulWidget {
   final Widget child;
@@ -187,13 +188,13 @@ class _BottomBarState extends State<BottomBar>
           child: SlideTransition(
             position: _offsetAnimation,
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(500),
+              borderRadius: AppRadius.big,
               clipBehavior: Clip.antiAliasWithSaveLayer,
               child: Container(
                 width: MediaQuery.of(context).size.width * 0.8,
                 decoration: BoxDecoration(
                   color: Theme.of(context).primaryColor,
-                  borderRadius: BorderRadius.circular(500),
+                  borderRadius: AppRadius.big,
                 ),
                 child: Material(
                   color: widget.barColor,

@@ -6,7 +6,8 @@ import 'package:travel_go/constant/app_spacing.dart';
 import 'package:travel_go/util/ui_helper.dart';
 
 class ActionSheet extends StatelessWidget {
-  const ActionSheet({super.key});
+  final Function()? onPressedEdit;
+  const ActionSheet({super.key, this.onPressedEdit});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,7 @@ class ActionSheet extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           buildIcon(
-              onPressed: () {},
+              onPressed: onPressedEdit,
               iconData: FontAwesomeIcons.pen,
               title: "Edit",
               textColor: AppColors.textPrimary,

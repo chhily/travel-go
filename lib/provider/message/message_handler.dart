@@ -102,7 +102,18 @@ class MessageHandler with ChangeNotifier {
     }
   }
 
-  Future<void> onEditTextMessage() async {}
+  Future<void> onEditTextMessage({required String? messageId}) async {
+    try {
+      await _socketService
+          .onEmitEditTextMessage(
+              chatId: AppUrl.chatId,
+              textMessage: "hello world",
+              messageId: messageId ?? "")
+          .then((value) => textMessageCT.clear());
+    } catch (exception) {
+      debugPrint("couldn't edit message $exception");
+    }
+  }
 
   void onDispose() {
     // TODO: implement dispose

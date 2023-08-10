@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:travel_go/constant/app_url.dart';
 import 'package:travel_go/constant/message_type.dart';
 import 'package:travel_go/model/message/personal_message.dart';
+import 'package:travel_go/provider/message/message_handler.dart';
 import 'package:travel_go/view/message/utility/widget/bottom_sheet.dart';
 import 'package:travel_go/view/message/widget/receiver/receiver_image.dart';
 import 'package:travel_go/view/message/widget/receiver/receiver_message.dart';
@@ -28,10 +30,17 @@ class ValidatedMessageTypeWidget extends StatelessWidget {
     if (personalMessageModel?.type == MessageType.textType) {
       return GestureDetector(
           onLongPress: () {
+            final _provider =
+                Provider.of<MessageHandler>(context, listen: false);
             showModalBottomSheet<void>(
               context: context,
               builder: (context) {
-                return const ActionSheet();
+                return ActionSheet(
+                  onPressedEdit: () {
+                    _provider.onEditTextMessage(
+                        messageId: personalMessageModel?.id);
+                  },
+                );
               },
             );
           },
