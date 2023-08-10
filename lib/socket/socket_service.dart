@@ -51,8 +51,8 @@ class SocketService {
     }
   }
 
-  // sub to receive from socket
-  void onReceiveMessageEvent({required String receiverId}) {
+  // sub to create receive message from socket
+  void onCreateReceiveMessageEvent({required String receiverId}) {
     socket.on(SocketRoute.onReceiveChat, (jsonValue) {
       log("onGetChatCreate ${SocketRoute.onReceiveChat} $jsonValue");
       if (jsonValue[ResponseField.actionField] == ResponseField.actionCreate) {
@@ -71,10 +71,28 @@ class SocketService {
     });
   }
 
-  // emit to send to socket
-  void onSendMessageEvent({required String senderId}) async {
+  // emit to create send to socket
+  void onCreateChatEvent({required String senderId}) async {
     socket.emit(SocketRoute.onCreateChat, {"users": senderId});
     log("create chat ${SocketRoute.onCreateChat}, {users: $senderId}");
+  }
+
+  Future<void> pubSendChatNew(
+      {required String chatId,
+      String? message,
+      String? photo,
+      String? voice}) async {
+    if (message != null) {
+      socket.emit(
+          SocketRoute.pubChatNew, {"chat_id": chatId, "message": message});
+      log("pubChatNews ${SocketRoute.pubChatNew}, {chat_id: $chatId, message: $message}");
+    } else if (photo != null) {
+      socket.emit(SocketRoute.pubChatNew, {"chat_id": chatId, "photo": photo});
+      log("pubChatNew ${SocketRoute.pubChatNew}, {chat_id: $chatId, photo: $photo}");
+    } else if (voice != null) {
+      socket.emit(SocketRoute.pubChatNew, {"chat_id": chatId, "voice": voice});
+      log("pubChatNew ${SocketRoute.pubChatNew}, {chat_id: $chatId, voice: $voice}");
+    }
   }
 
   // emit to get user chat value ({send chat})

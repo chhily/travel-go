@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:travel_go/constant/app_spacing.dart';
+import 'package:travel_go/constant/app_url.dart';
 import 'package:travel_go/provider/message/message_handler.dart';
 import 'package:travel_go/socket/socket_service.dart';
-import 'package:travel_go/util/ui_helper.dart';
+import 'package:travel_go/view/message/widget/date_time/date_time_sent.dart';
+import 'package:travel_go/view/message/widget/date_time/date_time_since.dart';
 import 'package:travel_go/view/message/widget/validate_message_type.dart';
 import 'package:travel_go/widget/loading_helper.dart';
 import 'package:travel_go/widget/pagination_handler.dart';
-
-import '../../constant/app_size.dart';
 
 class MessageListWidget extends StatefulWidget {
   const MessageListWidget({super.key});
@@ -33,7 +33,7 @@ class _MessageListWidgetState extends State<MessageListWidget> {
     Provider.of<MessageHandler>(context, listen: false);
     socketService = SocketService();
     socketService.initSocket();
-    onGetChatByID("645efa30d13e4f5bb4e76426");
+    onGetChatByID(AppUrl.chatId);
   }
 
   Future<void> onGetChatByID(String chatId) async {
@@ -57,7 +57,7 @@ class _MessageListWidgetState extends State<MessageListWidget> {
     return Consumer<MessageHandler>(
       builder: (context, valueNotifier, child) {
         final messageValue = valueNotifier.personalMessageList;
-        if (valueNotifier.loading) {
+        if (messageValue.isEmpty) {
           return const Loadinghelper();
         }
         return PaginationWidgetHandler(
@@ -69,7 +69,7 @@ class _MessageListWidgetState extends State<MessageListWidget> {
                       (valueNotifier.personalMessage!.pagination!.total / 10)
                           .ceil();
               await socketService.onEmitMessage(
-                  chatId: "645efa30d13e4f5bb4e76426", pageKey: pageKey);
+                  chatId: AppUrl.chatId, pageKey: pageKey);
             }
           },
           hasMoreData: valueNotifier.personalMessage!.pagination != null
@@ -80,8 +80,28 @@ class _MessageListWidgetState extends State<MessageListWidget> {
           itemCount: messageValue.length,
           itemWidget: (context, index) {
             final itemValue = messageValue.elementAt(index);
-            return ValidatedMessageTypeWidget(
-              personalMessageModel: itemValue,
+            return Column(
+              children: [
+                if (index == messageValue.length - 1 ||
+                    messageValue[(index + 1) > messageValue.length - 1
+                                ? index
+                                : index + 1]
+                            .createdAt
+                            ?.day !=
+                        itemValue.createdAt?.day) ...[
+                  DateTimeSinceWidget(sinceAgo: itemValue.createdAt),
+                ],
+                ValidatedMessageTypeWidget(
+                  personalMessageModel: itemValue,
+                ),
+                DateTimeSentWidget(
+                  isYourMessage:
+                      itemValue.senderId == "6359fb7d96cd484ba17e54f7"
+                          ? true
+                          : false,
+                  sentAgo: itemValue.createdAt,
+                )
+              ],
             );
           },
         );

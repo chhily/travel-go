@@ -3,12 +3,13 @@ import 'package:travel_go/constant/app_color.dart';
 import 'package:travel_go/constant/app_size.dart';
 
 class SenderTextFieldWidget extends StatelessWidget {
-  const SenderTextFieldWidget({super.key});
+  final TextEditingController textEditingController;
+  const SenderTextFieldWidget({super.key, required this.textEditingController});
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      controller: TextEditingController(),
+      controller: textEditingController,
       textAlign: TextAlign.start,
       decoration: InputDecoration(
           contentPadding: const EdgeInsets.symmetric(horizontal: 16),

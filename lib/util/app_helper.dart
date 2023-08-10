@@ -38,6 +38,12 @@ class AppHelper {
     return result;
   }
 
+  static String timeFormatter({DateTime? timeAgo}) {
+    if (timeAgo == null) return "N/A";
+    final result = DateFormat('d MMMM').format(timeAgo.toLocal());
+    return result;
+  }
+
   static String formatNumber({num? number}) {
     if (number == null) return "N/A";
     return NumberFormat.compact().format(number);

@@ -1,7 +1,11 @@
 class AppUrl {
+  AppUrl._();
   static String apiKey = "jnYm/tbsfeW8O5uXOARQiw==u8InOk0rMwzVlJD8";
 
   static const String baseChatUrl = "https://kas-chat-api.myoptistech.com";
+
+
+  static const String chatId = "645efa30d13e4f5bb4e76426";
 
   static const String baseApi = "https://kas-core.myoptistech.com";
   static const String senderToken =

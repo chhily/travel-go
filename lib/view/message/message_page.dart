@@ -22,6 +22,7 @@ class _MessagePageState extends State<MessagePage> {
     // TODO: implement initState
     super.initState();
     messageHandler = Provider.of<MessageHandler>(context, listen: false);
+    messageHandler.onInitTextController();
   }
 
   Future<ReceiverModel?> onInitData() async {
@@ -52,10 +53,14 @@ class _MessagePageState extends State<MessagePage> {
                 appBar: MessageAppBar(
                     imgUrl: messageHandler.receiverInfo?.photoUrl ?? " ",
                     username: messageHandler.receiverInfo?.firstName ?? "N/A"),
-                body: const Column(
+                body: Column(
                   children: [
-                    Expanded(child: MessageListWidget()),
-                    SenderActionWidget(),
+                    const Expanded(child: MessageListWidget()),
+                    SenderActionWidget(
+                        textEditingController: messageHandler.textMessageCT,
+                        onSendMessage: () {
+                          messageHandler.onSendTextMessage();
+                        }),
                   ],
                 )),
           );

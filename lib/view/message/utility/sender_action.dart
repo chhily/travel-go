@@ -5,7 +5,9 @@ import 'package:travel_go/constant/app_spacing.dart';
 import 'package:travel_go/view/message/utility/widget/sender_text_field.dart';
 
 class SenderActionWidget extends StatelessWidget {
-  const SenderActionWidget({super.key});
+  final TextEditingController textEditingController;
+  final void Function()? onSendMessage;
+  const SenderActionWidget({super.key, required this.textEditingController, this.onSendMessage});
 
   @override
   Widget build(BuildContext context) {
@@ -16,11 +18,13 @@ class SenderActionWidget extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Flexible(
-            child: SenderTextFieldWidget(),
+          Flexible(
+            child: SenderTextFieldWidget(
+              textEditingController: textEditingController,
+            ),
           ),
           InkWell(
-            onTap: () {},
+            onTap: onSendMessage,
             child: const Padding(
               padding: EdgeInsets.all(4.0),
               child: Icon(

@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:travel_go/model/message/personal_message.dart';
 import 'package:travel_go/model/message/receiver_model.dart';
 import 'package:travel_go/model/pagination.dart';
 
+import '../../constant/app_url.dart';
 import '../../socket/socket_service.dart';
 
 class MessageHandler with ChangeNotifier {
-  PagingController<int, PersonalMessageModel> messagePagedController =
-      PagingController(firstPageKey: 1);
   final SocketService _socketService = SocketService();
 
   PersonalMessageListModel? _personalMessageListModel;
   PersonalMessageListModel? get personalMessage => _personalMessageListModel;
 
-  List<PersonalMessageModel> _personalMessageList = [];
+  final List<PersonalMessageModel> _personalMessageList = [];
 
   List<PersonalMessageModel> get personalMessageList => _personalMessageList;
 
@@ -66,6 +64,28 @@ class MessageHandler with ChangeNotifier {
   void onDispose() {
     // TODO: implement dispose
     _personalMessageList.clear();
+    _personalMessageListModel = null;
+    textMessageCT.dispose();
+    onClearPagination();
     _receiverModel = null;
+  }
+
+  late TextEditingController textMessageCT;
+
+  onInitTextController() {
+    textMessageCT = TextEditingController();
+  }
+
+  Future<void> onSendTextMessage() async {
+    String textMessage = textMessageCT.text.trim();
+    if (textMessage.isNotEmpty) {
+      try {
+        await _socketService
+            .pubSendChatNew(chatId: AppUrl.chatId, message: textMessage)
+            .then((value) => textMessageCT.clear());
+      } catch (exception) {
+        debugPrint("error create new message $exception");
+      }
+    }
   }
 }
