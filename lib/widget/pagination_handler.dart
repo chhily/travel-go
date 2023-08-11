@@ -15,6 +15,7 @@ class PaginationWidgetHandler extends StatefulWidget {
   final EdgeInsetsGeometry? padding;
   final String? receiverImgUrl;
   final String? receiverUsername;
+  final bool? isReverse;
   final Widget Function(BuildContext context, int index) separatorBuilder;
   const PaginationWidgetHandler(
       {super.key,
@@ -25,7 +26,8 @@ class PaginationWidgetHandler extends StatefulWidget {
       required this.itemWidget,
       this.padding,
       this.receiverImgUrl,
-      this.receiverUsername});
+      this.receiverUsername,
+      this.isReverse = false});
 
   @override
   State<PaginationWidgetHandler> createState() =>
@@ -38,9 +40,16 @@ class _PaginationWidgetHandlerState extends State<PaginationWidgetHandler> {
   int loadingState = 0;
   void scrollListener(ScrollController? controller) {
     if (controller == null) return;
-    if (controller.offset >= controller.position.maxScrollExtent * 0.9) {
-      loadingState += 1;
-      onLoadingMoreData();
+    if (widget.isReverse == true) {
+      if (controller.offset >= controller.position.maxScrollExtent * 0.9) {
+        loadingState += 1;
+        onLoadingMoreData();
+      }
+    } else {
+      if (controller.offset >= controller.position.maxScrollExtent) {
+        loadingState += 1;
+        onLoadingMoreData();
+      }
     }
   }
 
@@ -76,7 +85,7 @@ class _PaginationWidgetHandlerState extends State<PaginationWidgetHandler> {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-        reverse: true,
+        reverse: widget.isReverse ?? false,
         controller: scrollController,
         padding: widget.padding ?? AppGap.mediumGap,
         itemBuilder: (context, index) {

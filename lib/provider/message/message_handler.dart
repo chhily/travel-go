@@ -65,44 +65,14 @@ class MessageHandler with ChangeNotifier {
   String? _imageValue;
   String? get imageValue => _imageValue;
 
+  onInitTextController() {
+    textMessageCT = TextEditingController();
+    editTextMessageCt = TextEditingController();
+  }
+
   onChangeSendMessageType(String? value) {
     _sendMessageType = value;
     notifyListeners();
-  }
-
-  Future<XFile?> onOpenImageGallery() async {
-    _imageFile = await ImagePicker()
-        .pickImage(source: ImageSource.gallery)
-        .then((value) {
-      onChangeSendMessageType(SendMessageType.imageMessage);
-      imagePreviewWidgetController.add(true);
-      return value;
-    });
-    return _imageFile;
-  }
-
-  Future<Uint8List?> onDecodeImage(XFile? file) async {
-    return _decodedImage = await file?.readAsBytes();
-  }
-
-  Future<void> imageConvertor({XFile? file}) async {
-    await onDecodeImage(file)
-        .then((value) => _base64Image = base64.encode(value ?? []));
-    _imageExtension = file?.path.split(".").last;
-  }
-
-  void onGetValuePasser({String? imageExtension, String? base64Image}) {
-    _imageValue = "data:image/$imageExtension;base64,$base64Image";
-  }
-
-  void onResetImageValue() {
-    _imageFile = null;
-    _imageExtension = null;
-    _base64Image = null;
-    _imageValue = null;
-    onChangeSendMessageType(null);
-    imagePreviewWidgetController.add(false);
-    _decodedImage = null;
   }
 
   Future<ReceiverModel?> onGetReceiverInfo() async {
@@ -175,12 +145,30 @@ class MessageHandler with ChangeNotifier {
     notifyListeners();
   }
 
-  onInitTextController() {
-    textMessageCT = TextEditingController();
-    editTextMessageCt = TextEditingController();
+  Future<XFile?> onOpenImageGallery() async {
+    _imageFile = await ImagePicker()
+        .pickImage(source: ImageSource.gallery)
+        .then((value) {
+      onChangeSendMessageType(SendMessageType.imageMessage);
+      imagePreviewWidgetController.add(true);
+      return value;
+    });
+    return _imageFile;
   }
 
-  var sentMessageController = StreamController<String?>.broadcast();
+  Future<Uint8List?> onDecodeImage(XFile? file) async {
+    return _decodedImage = await file?.readAsBytes();
+  }
+
+  Future<void> imageConvertor({XFile? file}) async {
+    await onDecodeImage(file)
+        .then((value) => _base64Image = base64.encode(value ?? []));
+    _imageExtension = file?.path.split(".").last;
+  }
+
+  void onGetValuePasser({String? imageExtension, String? base64Image}) {
+    _imageValue = "data:image/$imageExtension;base64,$base64Image";
+  }
 
   Future<void> onSendTextMessage() async {
     String textMessage = textMessageCT.text.trim();
@@ -236,6 +224,16 @@ class MessageHandler with ChangeNotifier {
     editTextMessageCt.clear();
     onGetMessageId(messageId: null, isEdit: false, textMessage: null);
     editMessageWidgetController.add(false);
+  }
+
+  void onResetImageValue() {
+    _imageFile = null;
+    _imageExtension = null;
+    _base64Image = null;
+    _imageValue = null;
+    onChangeSendMessageType(null);
+    imagePreviewWidgetController.add(false);
+    _decodedImage = null;
   }
 
   void onDispose() {

@@ -3,7 +3,6 @@ import 'package:travel_go/constant/app_size.dart';
 import 'package:travel_go/widget/image_helper.dart';
 import 'package:travel_go/widget/image_viewer.dart';
 
-
 class ReceiverImageWidget extends StatelessWidget {
   final String imageUrl;
   const ReceiverImageWidget({super.key, required this.imageUrl});
