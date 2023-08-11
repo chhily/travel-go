@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:travel_go/base/base_dio_handler.dart';
 import 'package:travel_go/constant/app_url.dart';
+import 'package:travel_go/model/chat/contact_model.dart';
 import 'package:travel_go/model/message/personal_message.dart';
 import 'package:travel_go/model/message/seen_message.dart';
 import 'package:travel_go/model/message/sender_receiver_model.dart';
@@ -53,7 +54,7 @@ class SocketService {
 
   // sub to create receive message from socket
   void onCreateReceiveMessageEvent({required String receiverId}) {
-    socket.on(SocketRoute.onReceiveChat, (jsonValue) {
+    socket.once(SocketRoute.onReceiveChat, (jsonValue) {
       log("onGetChatCreate ${SocketRoute.onReceiveChat} $jsonValue");
       if (jsonValue[ResponseField.actionField] == ResponseField.actionCreate) {
         try {
@@ -72,9 +73,56 @@ class SocketService {
   }
 
   // emit to create send to socket
-  void onCreateChatEvent({required String senderId}) async {
+  // this emit call when first interact to create
+  // receive then => onReceiveChatUserToUser
+  void onCreateSendMessageEvent({required String senderId}) async {
     socket.emit(SocketRoute.onCreateChat, {"users": senderId});
     log("create chat ${SocketRoute.onCreateChat}, {users: $senderId}");
+  }
+
+  //User to User list
+  Future<void> onEmitUserContactList({required int pageKey}) async {
+    socket.emit(SocketRoute.pubUsersChatList,
+        {"per_page": 10, "page_number": pageKey, "order_by": "DESC"});
+    log("pubChatLists ${SocketRoute.pubUsersChatList}, {per_page: 10, page_number: $pageKey, order_by: DESC");
+  }
+
+  //sub to receive contact list from socket
+  Future<void> onSubUserContactList() async {
+    socket.on(SocketRoute.onGetUserChatListsChange, (jsonValue) async {
+      /**
+       * ! first get all contact list
+       * */
+      await onGetAllUserContact(jsonValue).then((value) => null);
+    });
+  }
+
+  Future<ContactListModel?> onGetAllUserContact(dynamic jsonValue) async {
+    if (jsonValue[ResponseField.actionField] == ResponseField.actionGet) {
+      try {
+        final contactList =
+            ContactListModel.fromJson(jsonValue[ResponseField.dataField]);
+        prettyPrintJson(jsonValue[ResponseField.dataField],
+            msg: "user contact list");
+        debugPrint("contact list $contactList");
+      } catch (e) {
+        debugPrint("couldn't receiver user contact list $e");
+      }
+    }
+    return null;
+  }
+
+  Future<UserContactModel?> onReceiveLiveContact(dynamic jsonValue) async {
+    if (jsonValue[ResponseField.actionField] == ResponseField.actionNew) {
+      try {
+        final inComingMessage = PersonalMessageModel.fromJson(jsonValue[ResponseField.dataField]);
+
+
+      } catch (e) {
+        debugPrint("Couldn't receive live contact $e");
+      }
+    }
+    return null;
   }
 
   // send edited message
