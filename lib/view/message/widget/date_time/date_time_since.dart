@@ -15,7 +15,7 @@ class DateTimeSinceWidget extends StatelessWidget {
     return Center(
       child: Container(
         decoration: BoxDecoration(
-          color: AppColors.primary.withOpacity(0.5),
+          color: AppColors.primary.withOpacity(0.2),
           borderRadius: AppRadius.regular,
         ),
         margin: AppGap.regularGap,

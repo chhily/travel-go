@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:travel_go/constant/app_spacing.dart';
+import 'package:travel_go/constant/app_url.dart';
 import 'package:travel_go/util/ui_helper.dart';
 
 import '../constant/app_color.dart';
+import '../constant/app_size.dart';
 
 class PaginationWidgetHandler extends StatefulWidget {
   final Future<void> Function()? dataLoader;
@@ -10,6 +12,8 @@ class PaginationWidgetHandler extends StatefulWidget {
   final IndexedWidgetBuilder itemWidget;
   final bool hasMoreData;
   final EdgeInsetsGeometry? padding;
+  final String? receiverImgUrl;
+  final String? receiverUsername;
   final Widget Function(BuildContext context, int index) separatorBuilder;
   const PaginationWidgetHandler(
       {super.key,
@@ -18,7 +22,9 @@ class PaginationWidgetHandler extends StatefulWidget {
       required this.separatorBuilder,
       required this.itemCount,
       required this.itemWidget,
-      this.padding});
+      this.padding,
+      this.receiverImgUrl,
+      this.receiverUsername});
 
   @override
   State<PaginationWidgetHandler> createState() =>
@@ -73,12 +79,6 @@ class _PaginationWidgetHandlerState extends State<PaginationWidgetHandler> {
         controller: scrollController,
         padding: widget.padding ?? AppGap.mediumGap,
         itemBuilder: (context, index) {
-          if (widget.itemCount == 0) {
-            return SizedBox(
-              height: MediaQuery.of(context).size.height,
-              child: loaderWidget(),
-            );
-          }
           if (index == widget.itemCount) {
             return loaderWidget();
           } else {
@@ -102,7 +102,31 @@ class _PaginationWidgetHandlerState extends State<PaginationWidgetHandler> {
         ),
       );
     } else {
-      return UIHelper.textHelper(text: "No more Item");
+      return SizedBox(
+        height: MediaQuery.of(context).size.height * 0.5,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            UIHelper.imageAvatarHelper(
+                "${widget.receiverImgUrl}?token=${AppUrl.senderToken}",
+                size: 80),
+            VerticalSpacing.medium,
+            UIHelper.textHelper(
+                text: widget.receiverUsername ?? "",
+                fontSize: FontSize.fontSizeBig,
+                fontWeight: FontWeight.bold),
+            VerticalSpacing.regular,
+            Container(
+              padding: AppGap.smallGap,
+              decoration: BoxDecoration(
+                  borderRadius: AppRadius.regular,
+                  color: AppColors.primary.withOpacity(0.2)),
+              child: UIHelper.textHelper(text: "Visit Profile"),
+            )
+          ],
+        ),
+      );
     }
   }
 }

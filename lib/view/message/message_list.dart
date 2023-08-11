@@ -53,6 +53,9 @@ class _MessageListWidgetState extends State<MessageListWidget> {
           return const Loadinghelper();
         }
         return PaginationWidgetHandler(
+          receiverImgUrl: valueNotifier.receiverInfo?.photoUrl,
+          receiverUsername:
+              "${valueNotifier.receiverInfo?.lastName} ${valueNotifier.receiverInfo?.firstName}",
           dataLoader: () async {
             if (messageValue.length >= 10) {
               pageKey += 1;

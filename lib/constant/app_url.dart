@@ -3,11 +3,11 @@ class AppUrl {
   static String apiKey = "jnYm/tbsfeW8O5uXOARQiw==u8InOk0rMwzVlJD8";
 
   static const String baseChatUrl = "https://kas-chat-api.myoptistech.com";
-
-  static const String receiverId = "6139b0241eab37545f258b59";
+  // 64d45445b116b962116923d5
+  static const String receiverId = "64d45445b116b962116923d5";
   static const String senderId = "6359fb7d96cd484ba17e54f7";
-
-  static const String chatId = "645efa30d13e4f5bb4e76426";
+  // 64d598e50a5d5a6b0cf06f64
+  static const String chatId = "64d598e50a5d5a6b0cf06f64";
 
   static const String baseApi = "https://kas-core.myoptistech.com";
   static const String senderToken =

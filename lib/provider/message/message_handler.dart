@@ -27,7 +27,7 @@ class MessageHandler with ChangeNotifier {
 
   Future<ReceiverModel?> onGetReceiverInfo() async {
     _receiverModel =
-        await _socketService.onGetUserProfile(id: "6139b0241eab37545f258b59");
+        await _socketService.onGetUserProfile(id: AppUrl.receiverId);
     return _receiverModel;
   }
 

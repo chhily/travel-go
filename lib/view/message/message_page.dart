@@ -52,8 +52,9 @@ class _MessagePageState extends State<MessagePage> {
             child: Scaffold(
                 backgroundColor: AppColors.white,
                 appBar: MessageAppBar(
-                    imgUrl: messageHandler.receiverInfo?.photoUrl ?? " ",
-                    username: messageHandler.receiverInfo?.firstName ?? "N/A"),
+                    imgUrl: messageHandler.receiverInfo?.photoUrl ?? "",
+                    username:
+                        " ${messageHandler.receiverInfo?.lastName} ${messageHandler.receiverInfo?.firstName}"),
                 body: Column(
                   children: [
                     const Expanded(child: MessageListWidget()),
