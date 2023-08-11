@@ -60,7 +60,7 @@ class _MessagePageState extends State<MessagePage> {
       future: onInitData(),
       builder: (context, snapshot) {
         if (snapshot.data == null) {
-          return const Loadinghelper();
+          return const LoadingHelper();
         } else {
           return GestureDetector(
             onTap: () => FocusScope.of(context).unfocus(),
@@ -72,10 +72,20 @@ class _MessagePageState extends State<MessagePage> {
                         " ${messageHandler.receiverInfo?.lastName} ${messageHandler.receiverInfo?.firstName}"),
                 body: Column(
                   children: [
-                    Expanded(
-                        child: MessageListWidget(
-                      pageKey: pageKey,
-                      socketService: socketService,
+                    Expanded(child: MessageListWidget(
+                      dataLoader: () async {
+                        if (messageHandler.personalMessageList.length >= 10) {
+                          pageKey += 1;
+                          messageHandler.getMessagePagination != null &&
+                              pageKey <=
+                                  (messageHandler.personalMessage!.pagination!
+                                              .total /
+                                          10)
+                                      .ceil();
+                          await socketService.onEmitMessage(
+                              chatId: AppUrl.chatId, pageKey: pageKey);
+                        }
+                      },
                     )),
                     // StreamBuilder<String?>(
                     //   stream: messageHandler.sentMessageController.stream,

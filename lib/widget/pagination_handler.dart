@@ -81,7 +81,7 @@ class _PaginationWidgetHandlerState extends State<PaginationWidgetHandler> {
         padding: widget.padding ?? AppGap.mediumGap,
         itemBuilder: (context, index) {
           if (widget.itemCount == 0) {
-            return const Loadinghelper();
+            return const LoadingHelper();
           }
           if (index == widget.itemCount) {
             return loaderWidget();

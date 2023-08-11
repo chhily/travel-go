@@ -25,9 +25,9 @@ class ReceiverMessageWidget extends StatelessWidget {
         ),
         padding: const EdgeInsets.all(8),
         child: UIHelper.textHelper(
-            text: message,
+            text: message.trim(),
             textColor: AppColors.white,
-            textAlign: TextAlign.right),
+            maxLines: message.length),
       ),
     );
   }

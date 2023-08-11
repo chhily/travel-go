@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:travel_go/constant/app_color.dart';
 
-class Loadinghelper extends StatelessWidget {
-  const Loadinghelper({super.key});
+class LoadingHelper extends StatelessWidget {
+  const LoadingHelper({super.key});
 
   @override
   Widget build(BuildContext context) {

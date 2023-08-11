@@ -25,7 +25,7 @@ class SenderMessageWidget extends StatelessWidget {
         ),
         padding: const EdgeInsets.all(8),
         child: UIHelper.textHelper(
-          text: message,
+          text: message.trim(),
           textColor: AppColors.white,
           maxLines: message.length,
         ),
