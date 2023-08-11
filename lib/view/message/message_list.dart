@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:travel_go/constant/app_spacing.dart';
 import 'package:travel_go/constant/app_url.dart';
+import 'package:travel_go/model/message/personal_message.dart';
 import 'package:travel_go/provider/message/message_handler.dart';
 import 'package:travel_go/socket/socket_service.dart';
 import 'package:travel_go/view/message/widget/date_time/date_time_sent.dart';
@@ -10,64 +11,28 @@ import 'package:travel_go/view/message/widget/validate_message_type.dart';
 import 'package:travel_go/widget/loading_helper.dart';
 import 'package:travel_go/widget/pagination_handler.dart';
 
-class MessageListWidget extends StatefulWidget {
-  const MessageListWidget({super.key});
-
-  @override
-  State<MessageListWidget> createState() => _MessageListWidgetState();
-}
-
-class _MessageListWidgetState extends State<MessageListWidget> {
-  late SocketService socketService;
-  late MessageHandler messageHandler;
-  int pageKey = 1;
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    messageHandler = Provider.of<MessageHandler>(context, listen: false);
-    onInitSocket();
-  }
-
-  onInitSocket() {
-    Provider.of<MessageHandler>(context, listen: false);
-    socketService = SocketService();
-    socketService.initSocket();
-    messageHandler.onGetChatByID(
-        chatId: AppUrl.chatId, context: context, pageKey: pageKey);
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    socketService.onDisposeListener();
-    super.dispose();
-  }
+class MessageListWidget extends StatelessWidget {
+  final int pageKey;
+  final SocketService socketService;
+  const MessageListWidget(
+      {super.key, required this.pageKey, required this.socketService});
 
   @override
   Widget build(BuildContext context) {
     return Consumer<MessageHandler>(
       builder: (context, valueNotifier, child) {
         final messageValue = valueNotifier.personalMessageList;
-        if (valueNotifier.loading) {
-          return const Loadinghelper();
-        }
         return PaginationWidgetHandler(
           receiverImgUrl: valueNotifier.receiverInfo?.photoUrl,
           receiverUsername:
               "${valueNotifier.receiverInfo?.lastName} ${valueNotifier.receiverInfo?.firstName}",
           dataLoader: () async {
-            if (messageValue.length >= 10) {
-              pageKey += 1;
-              valueNotifier.getMessagePagination != null &&
-                  pageKey <=
-                      (valueNotifier.personalMessage!.pagination!.total / 10)
-                          .ceil();
-              await socketService.onEmitMessage(
-                  chatId: AppUrl.chatId, pageKey: pageKey);
-            }
+            onGetMoreData(
+                pageKey: pageKey,
+                valueNotifier: valueNotifier,
+                messageValue: messageValue);
           },
-          hasMoreData: valueNotifier.personalMessage!.pagination != null
+          hasMoreData: valueNotifier.personalMessage?.pagination != null
               ? messageValue.length <
                   valueNotifier.personalMessage!.pagination!.total
               : false,
@@ -91,10 +56,9 @@ class _MessageListWidgetState extends State<MessageListWidget> {
                 ),
                 DateTimeSentWidget(
                   isYourMessage:
-                      itemValue.senderId == "6359fb7d96cd484ba17e54f7"
-                          ? true
-                          : false,
+                      itemValue.senderId == AppUrl.senderId ? true : false,
                   sentAgo: itemValue.createdAt,
+                  isEditTed: itemValue.histories?.isNotEmpty ?? false,
                 )
               ],
             );
@@ -102,5 +66,19 @@ class _MessageListWidgetState extends State<MessageListWidget> {
         );
       },
     );
+  }
+
+  Future<void> onGetMoreData(
+      {required List<PersonalMessageModel> messageValue,
+      required int pageKey,
+      required MessageHandler valueNotifier}) async {
+    if (messageValue.length >= 10) {
+      pageKey += 1;
+      valueNotifier.getMessagePagination != null &&
+          pageKey <=
+              (valueNotifier.personalMessage!.pagination!.total / 10).ceil();
+      await socketService.onEmitMessage(
+          chatId: AppUrl.chatId, pageKey: pageKey);
+    }
   }
 }

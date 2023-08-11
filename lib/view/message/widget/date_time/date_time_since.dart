@@ -21,7 +21,7 @@ class DateTimeSinceWidget extends StatelessWidget {
         margin: AppGap.regularGap,
         padding: AppGap.smallGap,
         child: UIHelper.textHelper(
-            text: AppHelper.timeFormatter(timeAgo: sinceAgo),
+            text: AppHelper.dayFormatter(dayAgo: sinceAgo),
             fontSize: FontSize.fontSizeBig),
       ),
     );

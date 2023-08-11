@@ -48,14 +48,12 @@ class MessageHandler with ChangeNotifier {
       {required String chatId,
       required int pageKey,
       required BuildContext context}) async {
-    onChangeLoading(true);
     await _socketService
         .onEmitMessage(chatId: chatId, pageKey: pageKey)
         .then((value) async {
       await _socketService.onReceiveChatUserToUser(
           context: context, chatId: chatId);
     });
-    onChangeLoading(false);
   }
 
   onInitPersonalMessageList(PersonalMessageListModel? value) {
@@ -76,6 +74,22 @@ class MessageHandler with ChangeNotifier {
     notifyListeners();
   }
 
+  onEditSenderMessage(PersonalMessageModel? editedMessage) {
+    if (editedMessage == null) return;
+    _personalMessageList.firstWhere((eachMessage) {
+      if (eachMessage.id == editedMessage.id) {
+        final indexOfMessage = _personalMessageList.indexOf(eachMessage);
+        _personalMessageList[indexOfMessage] = editedMessage;
+        return true;
+      }
+      return false;
+    });
+    notifyListeners();
+  }
+
+  bool? isSeen = false;
+  onUpdateSeenMessage(bool? value) => isSeen = value;
+
   onUpdateSendingMessage(String message) {
     _personalMessageList.insert(0, PersonalMessageModel(message: message));
     notifyListeners();
@@ -83,6 +97,7 @@ class MessageHandler with ChangeNotifier {
 
   onInitTextController() {
     textMessageCT = TextEditingController();
+    editTextMessageCt = TextEditingController();
   }
 
   var sentMessageController = StreamController<String?>.broadcast();
@@ -102,25 +117,56 @@ class MessageHandler with ChangeNotifier {
     }
   }
 
-  Future<void> onEditTextMessage({required String? messageId}) async {
-    try {
-      await _socketService
-          .onEmitEditTextMessage(
-              chatId: AppUrl.chatId,
-              textMessage: "hello world",
-              messageId: messageId ?? "")
-          .then((value) => textMessageCT.clear());
-    } catch (exception) {
-      debugPrint("couldn't edit message $exception");
+  var editMessageWidgetController = StreamController<bool>.broadcast();
+
+  late TextEditingController editTextMessageCt;
+  bool _isEditMessage = false;
+  bool get isEditMessage => _isEditMessage;
+
+  String? _messageId;
+  String? get messageId => _messageId;
+
+  String? _textMessage;
+  String? get textMessage => _textMessage;
+
+  void onGetMessageId(
+      {required String? messageId,
+      required bool isEdit,
+      required String? textMessage}) {
+    _messageId = messageId;
+    _isEditMessage = isEdit;
+    _textMessage = textMessage;
+    editMessageWidgetController.add(true);
+  }
+
+  Future<void> onEditTextMessage() async {
+    String editedMessage = editTextMessageCt.text.trim();
+    if (editedMessage.isNotEmpty) {
+      try {
+        await _socketService
+            .onEmitEditTextMessage(
+                chatId: AppUrl.chatId,
+                textMessage: editedMessage,
+                messageId: _messageId ?? "")
+            .then((value) => onResetEdit());
+      } catch (exception) {
+        debugPrint("couldn't edit message $exception");
+      }
     }
+  }
+
+  void onResetEdit() {
+    editTextMessageCt.clear();
+    onGetMessageId(messageId: null, isEdit: false, textMessage: null);
+    editMessageWidgetController.add(false);
   }
 
   void onDispose() {
     // TODO: implement dispose
+    textMessageCT.dispose();
+    editTextMessageCt.dispose();
     _personalMessageList.clear();
     _personalMessageListModel = null;
-    textMessageCT.dispose();
-    // sentMessageController.close();
     onClearPagination();
     _receiverModel = null;
   }

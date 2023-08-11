@@ -10,11 +10,13 @@ class DateTimeSentWidget extends StatelessWidget {
   final Stream<int>? stream;
   final bool isYourMessage;
   final DateTime? sentAgo;
+  final bool isEditTed;
   const DateTimeSentWidget(
       {super.key,
       required this.sentAgo,
       this.stream,
-      required this.isYourMessage});
+      required this.isYourMessage,
+      required this.isEditTed});
 
   @override
   Widget build(BuildContext context) {
@@ -47,42 +49,38 @@ class DateTimeSentWidget extends StatelessWidget {
       mainAxisAlignment:
           !isYourMessage ? MainAxisAlignment.start : MainAxisAlignment.end,
       children: [
-        if (!isYourMessage)
+        if (!isYourMessage) ...[
           const Icon(
             Icons.done_all,
             color: AppColors.black,
             size: 14,
           ),
-        HorizontalSpacing.small,
-        // if (isYourMessage && isEdited) ...[
-        //   UIHelper.textHelper(
-        //     text: "chat.edited".tr(),
-        //     textColor: AppColor.textSecondary,
-        //     fontSize: 10.0,
-        //   ),
-        //   HorizontalSpacing.medium,
-        // ],
-        UIHelper.textHelper(
-          text: AppHelper.timeFormatter(timeAgo: sentAgo),
-          textColor: AppColors.black,
-          fontSize: FontSize.fontSizeMedium,
-        ),
-        // if (!isYourMessage && isEdited) ...[
-        //   const SpaceX(4),
-        //   CustomText(
-        //     text: "chat.edited".tr(),
-        //     textColor: AppColor.textSecondary,
-        //     fontSize: 10.0,
-        //     isOverflow: false,
-        //   ),
-        // ],
-        HorizontalSpacing.small,
-        // if (isYourMessage && isSeen)
-        //   const Icon(
-        //     Icons.done_all,
-        //     color: AppColor.textSecondary,
-        //     size: 15,
-        //   ),
+          HorizontalSpacing.small,
+          UIHelper.textHelper(
+            text: AppHelper.timeFormatter(timeAgo: sentAgo),
+            fontSize: FontSize.fontSizeMedium,
+          ),
+          HorizontalSpacing.small,
+          if (isEditTed) ...[
+            UIHelper.textHelper(
+              text: "edited",
+              fontSize: FontSize.fontSizeMedium,
+            )
+          ]
+        ] else ...[
+          UIHelper.textHelper(
+            text: AppHelper.timeFormatter(timeAgo: sentAgo),
+            textColor: AppColors.textPrimary,
+            fontSize: FontSize.fontSizeMedium,
+          ),
+          HorizontalSpacing.small,
+          if (isEditTed) ...[
+            UIHelper.textHelper(
+              text: "edited",
+              fontSize: FontSize.fontSizeMedium,
+            )
+          ]
+        ]
       ],
     );
   }

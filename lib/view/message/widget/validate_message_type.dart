@@ -37,8 +37,11 @@ class ValidatedMessageTypeWidget extends StatelessWidget {
               builder: (context) {
                 return ActionSheet(
                   onPressedEdit: () {
-                    _provider.onEditTextMessage(
-                        messageId: personalMessageModel?.id);
+                    _provider.onGetMessageId(
+                        textMessage: personalMessageModel?.message,
+                        messageId: personalMessageModel?.id,
+                        isEdit: true);
+                    Navigator.pop(context);
                   },
                 );
               },

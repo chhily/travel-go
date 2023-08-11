@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:travel_go/constant/app_spacing.dart';
 import 'package:travel_go/constant/app_url.dart';
 import 'package:travel_go/util/ui_helper.dart';
+import 'package:travel_go/widget/loading_helper.dart';
 
 import '../constant/app_color.dart';
 import '../constant/app_size.dart';
@@ -79,6 +80,9 @@ class _PaginationWidgetHandlerState extends State<PaginationWidgetHandler> {
         controller: scrollController,
         padding: widget.padding ?? AppGap.mediumGap,
         itemBuilder: (context, index) {
+          if (widget.itemCount == 0) {
+            return const Loadinghelper();
+          }
           if (index == widget.itemCount) {
             return loaderWidget();
           } else {

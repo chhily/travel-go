@@ -40,7 +40,13 @@ class AppHelper {
 
   static String timeFormatter({DateTime? timeAgo}) {
     if (timeAgo == null) return "N/A";
-    final result = DateFormat('d MMMM').format(timeAgo.toLocal());
+    final result = DateFormat('hh:mm a').format(timeAgo.toLocal());
+    return result;
+  }
+
+  static String dayFormatter({DateTime? dayAgo}) {
+    if (dayAgo == null) return "N/A";
+    final result = DateFormat('d MMMM').format(dayAgo.toLocal());
     return result;
   }
 

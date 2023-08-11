@@ -3,11 +3,13 @@ import 'package:provider/provider.dart';
 import 'package:travel_go/constant/app_color.dart';
 import 'package:travel_go/model/message/receiver_model.dart';
 import 'package:travel_go/provider/message/message_handler.dart';
+import 'package:travel_go/socket/socket_service.dart';
 import 'package:travel_go/view/message/message_list.dart';
 import 'package:travel_go/view/message/utility/sender_action.dart';
-import 'package:travel_go/view/message/widget/loader/message_text_loader.dart';
 import 'package:travel_go/view/message/widget/message_appbar.dart';
 import 'package:travel_go/widget/loading_helper.dart';
+
+import '../../constant/app_url.dart';
 
 class MessagePage extends StatefulWidget {
   const MessagePage({super.key});
@@ -18,11 +20,14 @@ class MessagePage extends StatefulWidget {
 
 class _MessagePageState extends State<MessagePage> {
   late MessageHandler messageHandler;
+  late SocketService socketService;
+  int pageKey = 1;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     messageHandler = Provider.of<MessageHandler>(context, listen: false);
+    onInitSocket();
     messageHandler.onInitTextController();
   }
 
@@ -31,10 +36,20 @@ class _MessagePageState extends State<MessagePage> {
     return data;
   }
 
+  onInitSocket() {
+    Provider.of<MessageHandler>(context, listen: false);
+    socketService = SocketService();
+    socketService.initSocket();
+    socketService.onEmitToSeenAllMessage(chatId: AppUrl.chatId);
+    messageHandler.onGetChatByID(
+        chatId: AppUrl.chatId, context: context, pageKey: pageKey);
+  }
+
   @override
   void dispose() {
     // TODO: implement dispose
     messageHandler.onDispose();
+    socketService.onDisposeListener();
     // messageHandler.dispose();
     super.dispose();
   }
@@ -57,7 +72,11 @@ class _MessagePageState extends State<MessagePage> {
                         " ${messageHandler.receiverInfo?.lastName} ${messageHandler.receiverInfo?.firstName}"),
                 body: Column(
                   children: [
-                    const Expanded(child: MessageListWidget()),
+                    Expanded(
+                        child: MessageListWidget(
+                      pageKey: pageKey,
+                      socketService: socketService,
+                    )),
                     // StreamBuilder<String?>(
                     //   stream: messageHandler.sentMessageController.stream,
                     //   builder: (context, snapshot) {

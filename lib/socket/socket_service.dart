@@ -77,6 +77,7 @@ class SocketService {
     log("create chat ${SocketRoute.onCreateChat}, {users: $senderId}");
   }
 
+  // send edited message
   Future<void> onEmitEditTextMessage(
       {required String chatId,
       required String messageId,
@@ -86,6 +87,7 @@ class SocketService {
     log("pubEditChatById ${SocketRoute.pubChatEdit}, {chat_id: $chatId, message_id: $messageId, message: $textMessage}");
   }
 
+  // send new message
   Future<void> pubSendChatNew(
       {required String chatId,
       String? message,
@@ -133,6 +135,10 @@ class SocketService {
           .then((value) => messageHandler.onInitPersonalMessageList(value));
       await onReceiveLiveMessage(jsonValue)
           .then((value) => messageHandler.onUpdateLiveMessage(value));
+      await onUpdateEditedMessage(jsonValue)
+          .then((value) => messageHandler.onEditSenderMessage(value));
+      await onSeenLiveMessage(jsonValue)
+          .then((value) => messageHandler.onUpdateSeenMessage(value?.success));
     });
   }
 
@@ -180,22 +186,47 @@ class SocketService {
     return null;
   }
 
-  Future<void> onSeenMessage(dynamic handler) async {
+  Future<PersonalMessageModel?> onUpdateEditedMessage(dynamic jsonValue) async {
+    /**
+     * ! on update message  (after sender || receiver edited message )
+     */
+    if (jsonValue[ResponseField.actionField] == ResponseField.actionEdit) {
+      try {
+        /// user json data and set to edit by its id
+        final editedMessage =
+            PersonalMessageModel.fromJson(jsonValue[ResponseField.dataField]);
+        return editedMessage;
+      } catch (e) {
+        debugPrint("catch exception actionEdit: ${e.toString()}");
+      }
+    }
+    return null;
+  }
+
+  Future<SeenMessageModel?> onSeenLiveMessage(dynamic handler) async {
+    /**
+     * ! on seen (live & and first init)
+     */
     if (handler[ResponseField.actionField] == ResponseField.actionSeen) {
       try {
         /// user json data and set to list
         final chatSeen =
             SeenMessageModel.fromJson(handler[ResponseField.dataField]);
-
         if (chatSeen.success != null) {
           /// update value seen chat by chat.success
           prettyPrintJson(handler[ResponseField.dataField], msg: "seen event");
-          debugPrint("$chatSeen");
+          return chatSeen;
         }
       } catch (e) {
         debugPrint("catch exception actionSeen: ${e.toString()}");
       }
     }
+    return null;
+  }
+
+  Future<void> onEmitToSeenAllMessage({required String chatId}) async {
+    socket.emit(SocketRoute.pubChatSeen, {"chat_id": chatId});
+    log("seen all message ${SocketRoute.pubChatSeen}, {chat_id: $chatId}");
   }
 
   static const JsonEncoder encoder = JsonEncoder.withIndent('  ');
@@ -220,7 +251,7 @@ class SocketService {
 
   void onDisposeListener() {
     socket.disconnected;
-    // socket.close();
+    socket.close();
     socket.clearListeners();
     socket.destroy();
     socket.dispose();

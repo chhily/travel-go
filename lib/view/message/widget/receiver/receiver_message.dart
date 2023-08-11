@@ -21,7 +21,7 @@ class ReceiverMessageWidget extends StatelessWidget {
             topLeft: Radius.circular(12),
             topRight: Radius.circular(12),
           ),
-          color: AppColors.primary,
+          color: AppColors.secondary,
         ),
         padding: const EdgeInsets.all(8),
         child: UIHelper.textHelper(

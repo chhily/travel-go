@@ -43,7 +43,7 @@ class ActionSheet extends StatelessWidget {
       Color? color,
       required IconData iconData}) {
     return IconButton(
-        onPressed: () {},
+        onPressed: onPressed,
         icon: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
