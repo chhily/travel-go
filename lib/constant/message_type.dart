@@ -8,3 +8,10 @@ class MessageType {
   static const String invoiceType = "INVOICE";
   static const String paymentType = "PAYMENT";
 }
+
+class SendMessageType {
+  SendMessageType._();
+  static const String textMessage = "text";
+  static const String imageMessage = "image";
+  static const String voiceMessage = "voice";
+}

@@ -3,7 +3,6 @@ import 'package:travel_go/constant/app_size.dart';
 import 'package:travel_go/widget/image_helper.dart';
 import 'package:travel_go/widget/image_viewer.dart';
 
-
 class SenderImageWidget extends StatelessWidget {
   final String imageUrl;
   const SenderImageWidget({super.key, required this.imageUrl});
@@ -27,7 +26,9 @@ class SenderImageWidget extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: AppRadius.regular,
           ),
-          child: NetworkImageHelper(imageUrl: imageUrl),
+          child: ClipRRect(
+              borderRadius: AppRadius.regular,
+              child: NetworkImageHelper(imageUrl: imageUrl)),
         ),
       ),
     );

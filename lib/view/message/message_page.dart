@@ -103,11 +103,7 @@ class _MessagePageState extends State<MessagePage> {
                     //     }
                     //   },
                     // ),
-                    SenderActionWidget(
-                        textEditingController: messageHandler.textMessageCT,
-                        onSendMessage: () {
-                          messageHandler.onSendTextMessage();
-                        }),
+                    const SenderActionWidget(),
                   ],
                 )),
           );

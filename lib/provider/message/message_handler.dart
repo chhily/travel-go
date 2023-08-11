@@ -1,16 +1,38 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:travel_go/constant/message_type.dart';
 import 'package:travel_go/model/message/personal_message.dart';
 import 'package:travel_go/model/message/receiver_model.dart';
 import 'package:travel_go/model/pagination.dart';
 
 import '../../constant/app_url.dart';
 import '../../socket/socket_service.dart';
+import 'package:image_picker/image_picker.dart';
+
+typedef OnPickImageCallback = void Function(
+    double? maxWidth, double? maxHeight, int? quality);
 
 class MessageHandler with ChangeNotifier {
   final SocketService _socketService = SocketService();
+
   late TextEditingController textMessageCT;
+  late TextEditingController editTextMessageCt;
+
+  var editMessageWidgetController = StreamController<bool>.broadcast();
+
+  var imagePreviewWidgetController = StreamController<bool>.broadcast();
+
+  bool _isEditMessage = false;
+  bool get isEditMessage => _isEditMessage;
+
+  String? _messageId;
+  String? get messageId => _messageId;
+
+  String? _textMessage;
+  String? get textMessage => _textMessage;
 
   PersonalMessageListModel? _personalMessageListModel;
   PersonalMessageListModel? get personalMessage => _personalMessageListModel;
@@ -24,6 +46,64 @@ class MessageHandler with ChangeNotifier {
 
   ReceiverModel? _receiverModel;
   ReceiverModel? get receiverInfo => _receiverModel;
+
+  XFile? _imageFile;
+  XFile? get imageFile => _imageFile;
+
+  String? _imageExtension;
+  String? get imageExtension => _imageExtension;
+
+  Uint8List? _decodedImage;
+  Uint8List? get decodedImage => _decodedImage;
+
+  String? _base64Image;
+  String? get base64Image => _base64Image;
+
+  String? _sendMessageType;
+  String? get sendMessageType => _sendMessageType;
+
+  String? _imageValue;
+  String? get imageValue => _imageValue;
+
+  onChangeSendMessageType(String? value) {
+    _sendMessageType = value;
+    notifyListeners();
+  }
+
+  Future<XFile?> onOpenImageGallery() async {
+    _imageFile = await ImagePicker()
+        .pickImage(source: ImageSource.gallery)
+        .then((value) {
+      onChangeSendMessageType(SendMessageType.imageMessage);
+      imagePreviewWidgetController.add(true);
+      return value;
+    });
+    return _imageFile;
+  }
+
+  Future<Uint8List?> onDecodeImage(XFile? file) async {
+    return _decodedImage = await file?.readAsBytes();
+  }
+
+  Future<void> imageConvertor({XFile? file}) async {
+    await onDecodeImage(file)
+        .then((value) => _base64Image = base64.encode(value ?? []));
+    _imageExtension = file?.path.split(".").last;
+  }
+
+  void onGetValuePasser({String? imageExtension, String? base64Image}) {
+    _imageValue = "data:image/$imageExtension;base64,$base64Image";
+  }
+
+  void onResetImageValue() {
+    _imageFile = null;
+    _imageExtension = null;
+    _base64Image = null;
+    _imageValue = null;
+    onChangeSendMessageType(null);
+    imagePreviewWidgetController.add(false);
+    _decodedImage = null;
+  }
 
   Future<ReceiverModel?> onGetReceiverInfo() async {
     _receiverModel =
@@ -107,7 +187,7 @@ class MessageHandler with ChangeNotifier {
     if (textMessage.isNotEmpty) {
       try {
         await _socketService
-            .pubSendChatNew(chatId: AppUrl.chatId, message: textMessage)
+            .onEmitToSendNewMessage(chatId: AppUrl.chatId, message: textMessage)
             .then((value) {
           textMessageCT.clear();
         });
@@ -117,17 +197,14 @@ class MessageHandler with ChangeNotifier {
     }
   }
 
-  var editMessageWidgetController = StreamController<bool>.broadcast();
-
-  late TextEditingController editTextMessageCt;
-  bool _isEditMessage = false;
-  bool get isEditMessage => _isEditMessage;
-
-  String? _messageId;
-  String? get messageId => _messageId;
-
-  String? _textMessage;
-  String? get textMessage => _textMessage;
+  Future<void> onSendImageMessage(String? photoBase64) async {
+    try {
+      await _socketService.onEmitToSendNewMessage(
+          chatId: AppUrl.chatId, photo: photoBase64);
+    } catch (exception) {
+      debugPrint("couldn't send image $exception");
+    }
+  }
 
   void onGetMessageId(
       {required String? messageId,
@@ -167,6 +244,7 @@ class MessageHandler with ChangeNotifier {
     editTextMessageCt.dispose();
     _personalMessageList.clear();
     _personalMessageListModel = null;
+    _sendMessageType = null;
     onClearPagination();
     _receiverModel = null;
   }

@@ -33,8 +33,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     geoHandler = GeoHandler();
     initData();
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => geoHandler.onGetUserLocation());
+    // WidgetsBinding.instance
+    //     .addPostFrameCallback((_) => geoHandler.onGetUserLocation());
   }
 
   @override

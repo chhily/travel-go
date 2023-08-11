@@ -107,7 +107,7 @@ class _PaginationWidgetHandlerState extends State<PaginationWidgetHandler> {
       );
     } else {
       return SizedBox(
-        height: MediaQuery.of(context).size.height * 0.5,
+        height: MediaQuery.of(context).size.height * 0.2,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -121,13 +121,17 @@ class _PaginationWidgetHandlerState extends State<PaginationWidgetHandler> {
                 fontSize: FontSize.fontSizeBig,
                 fontWeight: FontWeight.bold),
             VerticalSpacing.regular,
-            Container(
-              padding: AppGap.smallGap,
-              decoration: BoxDecoration(
-                  borderRadius: AppRadius.regular,
-                  color: AppColors.primary.withOpacity(0.2)),
-              child: UIHelper.textHelper(text: "Visit Profile"),
-            )
+            if (widget.itemCount > 0) ...[
+              const SizedBox.shrink()
+            ] else ...[
+              Container(
+                padding: AppGap.smallGap,
+                decoration: BoxDecoration(
+                    borderRadius: AppRadius.regular,
+                    color: AppColors.primary.withOpacity(0.2)),
+                child: UIHelper.textHelper(text: "Visit Profile"),
+              ),
+            ]
           ],
         ),
       );

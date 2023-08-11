@@ -88,7 +88,7 @@ class SocketService {
   }
 
   // send new message
-  Future<void> pubSendChatNew(
+  Future<void> onEmitToSendNewMessage(
       {required String chatId,
       String? message,
       String? photo,
