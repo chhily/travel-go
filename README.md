@@ -35,3 +35,7 @@ This is a Flutter application that uses Material 3 to create a Travel applicatio
     <img src="assets/screenshot/notification.jpg" width="15%" height="auto" align="center">
     <img src="assets/screenshot/user.jpg" width="15%" height="auto" align="center">
  </div>
+
+<div style="text-align:center; width: 100%;"> 
+    <img src="assets/screenshot/chat.jpg" width="15%" height="auto" align="center">
+</div>
