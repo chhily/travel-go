@@ -26,14 +26,14 @@ class ContactListModel {
 class UserContactModel {
   UserContactModel({
     this.id,
-    this.users,
+    this.receiver,
     this.dataId,
     this.unreadMessagesCount,
     this.lastMessage,
     this.shop,
   });
 
-  final List<ReceiverModel>? users;
+  final List<ReceiverModel>? receiver;
   final String? dataId;
   final String? id;
   final int? unreadMessagesCount;
@@ -43,7 +43,7 @@ class UserContactModel {
   factory UserContactModel.fromJson(Map<String, dynamic> json) =>
       UserContactModel(
         id: json["_id"],
-        users: json["users"] == null
+        receiver: json["users"] == null
             ? []
             : List<ReceiverModel>.from(json["users"].map((x) =>
                 x != null ? ReceiverModel.fromJson(x) : ReceiverModel())),

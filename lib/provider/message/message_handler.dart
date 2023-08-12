@@ -8,7 +8,6 @@ import 'package:travel_go/model/message/personal_message.dart';
 import 'package:travel_go/model/message/receiver_model.dart';
 import 'package:travel_go/model/pagination.dart';
 
-import '../../constant/app_url.dart';
 import '../../socket/socket_service.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -75,9 +74,9 @@ class MessageHandler with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<ReceiverModel?> onGetReceiverInfo() async {
+  Future<ReceiverModel?> onGetReceiverInfo({required String receiverId}) async {
     _receiverModel =
-        await _socketService.onGetUserProfile(id: AppUrl.receiverId);
+        await _socketService.onGetUserProfile(id: receiverId);
     return _receiverModel;
   }
 
@@ -170,12 +169,12 @@ class MessageHandler with ChangeNotifier {
     _imageValue = "data:image/$imageExtension;base64,$base64Image";
   }
 
-  Future<void> onSendTextMessage() async {
+  Future<void> onSendTextMessage({required String chatId}) async {
     String textMessage = textMessageCT.text.trim();
     if (textMessage.isNotEmpty) {
       try {
         await _socketService
-            .onEmitToSendNewMessage(chatId: AppUrl.chatId, message: textMessage)
+            .onEmitToSendNewMessage(chatId: chatId, message: textMessage)
             .then((value) {
           textMessageCT.clear();
         });
@@ -185,10 +184,11 @@ class MessageHandler with ChangeNotifier {
     }
   }
 
-  Future<void> onSendImageMessage(String? photoBase64) async {
+  Future<void> onSendImageMessage(
+      {String? photoBase64, required String chatId}) async {
     try {
       await _socketService.onEmitToSendNewMessage(
-          chatId: AppUrl.chatId, photo: photoBase64);
+          chatId: chatId, photo: photoBase64);
     } catch (exception) {
       debugPrint("couldn't send image $exception");
     }
@@ -204,13 +204,13 @@ class MessageHandler with ChangeNotifier {
     editMessageWidgetController.add(true);
   }
 
-  Future<void> onEditTextMessage() async {
+  Future<void> onEditTextMessage({required String chatId}) async {
     String editedMessage = editTextMessageCt.text.trim();
     if (editedMessage.isNotEmpty) {
       try {
         await _socketService
             .onEmitEditTextMessage(
-                chatId: AppUrl.chatId,
+                chatId: chatId,
                 textMessage: editedMessage,
                 messageId: _messageId ?? "")
             .then((value) => onResetEdit());

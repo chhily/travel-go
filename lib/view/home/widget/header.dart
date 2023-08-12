@@ -3,8 +3,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:travel_go/constant/app_color.dart';
 import 'package:travel_go/constant/app_size.dart';
 import 'package:travel_go/constant/app_spacing.dart';
+import 'package:travel_go/constant/app_url.dart';
 import 'package:travel_go/util/ui_helper.dart';
 import 'package:travel_go/view/message/message_page.dart';
+
+import '../../contact/contact_page.dart';
 
 class HomeHeaderWidget extends StatelessWidget {
   final Stream<String?>? streamController;
@@ -52,7 +55,7 @@ class HomeHeaderWidget extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const MessagePage(),
+                      builder: (context) => const ContactPage(),
                     ));
               },
               icon: const Icon(
@@ -66,7 +69,8 @@ class HomeHeaderWidget extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const MessagePage(),
+                      builder: (context) => const MessagePage(
+                          chatId: AppUrl.chatId, receiverId: AppUrl.receiverId),
                     ));
               },
               icon: const Icon(

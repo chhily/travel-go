@@ -11,6 +11,7 @@ import 'package:travel_go/model/chat/contact_model.dart';
 import 'package:travel_go/model/message/personal_message.dart';
 import 'package:travel_go/model/message/seen_message.dart';
 import 'package:travel_go/model/message/sender_receiver_model.dart';
+import 'package:travel_go/provider/message/contact_handler.dart';
 import 'package:travel_go/provider/message/message_handler.dart';
 import 'package:travel_go/socket/response_type.dart';
 import 'package:travel_go/socket/socket_route.dart';
@@ -88,23 +89,46 @@ class SocketService {
   }
 
   //sub to receive contact list from socket
-  Future<void> onSubUserContactList() async {
-    socket.on(SocketRoute.onGetUserChatListsChange, (jsonValue) async {
-      /**
+  Future<void> onSubUserContactList({required BuildContext context}) async {
+    final contactHandler = Provider.of<ContactHandler>(context, listen: false);
+    socket.on(
+      SocketRoute.onGetUserChatListsChange,
+      (jsonValue) async {
+        /**
        * ! first get all contact list
        * */
-      await onGetAllUserContact(jsonValue).then((value) => null);
-    });
+        await onGetAllUserContact(jsonValue).then(
+          (contactList) {
+            if (contactList != null) {
+              contactHandler.onGetUserContactList(contactList.userContactModel);
+              // contactHandler.onGetLiveContactList(contactList.userContactModel);
+            } else {
+              debugPrint("this is another event of receive data");
+            }
+          },
+        );
+        await onReceiveLiveContact(jsonValue).then(
+          (liveContact) {
+            print("live contact value $liveContact");
+            if (liveContact != null) {
+              contactHandler.onUpdateLiveContactValue(liveContact);
+            }
+          },
+        );
+      },
+    );
   }
 
   Future<ContactListModel?> onGetAllUserContact(dynamic jsonValue) async {
     if (jsonValue[ResponseField.actionField] == ResponseField.actionGet) {
+      debugPrint("action get");
       try {
         final contactList =
             ContactListModel.fromJson(jsonValue[ResponseField.dataField]);
         prettyPrintJson(jsonValue[ResponseField.dataField],
             msg: "user contact list");
         debugPrint("contact list $contactList");
+        return contactList;
       } catch (e) {
         debugPrint("couldn't receiver user contact list $e");
       }
@@ -112,18 +136,34 @@ class SocketService {
     return null;
   }
 
-  Future<UserContactModel?> onReceiveLiveContact(dynamic jsonValue) async {
+  Future<PersonalMessageModel?> onReceiveLiveContact(dynamic jsonValue) async {
     if (jsonValue[ResponseField.actionField] == ResponseField.actionNew) {
+      debugPrint("action new");
       try {
-        final inComingMessage = PersonalMessageModel.fromJson(jsonValue[ResponseField.dataField]);
-
-
+        final liveContact =
+            PersonalMessageModel.fromJson(jsonValue[ResponseField.dataField]);
+        prettyPrintJson(jsonValue[ResponseField.dataField],
+            msg: "user live contact list");
+        debugPrint("live contact list $liveContact");
+        return liveContact;
       } catch (e) {
-        debugPrint("Couldn't receive live contact $e");
+        debugPrint("couldn't receiver user live contact list $e");
       }
     }
     return null;
   }
+  //
+  // Future<UserContactModel?> onReceiveLiveContact(dynamic jsonValue) async {
+  //   if (jsonValue[ResponseField.actionField] == ResponseField.actionNew) {
+  //     try {
+  //       final inComingMessage =
+  //           PersonalMessageModel.fromJson(jsonValue[ResponseField.dataField]);
+  //     } catch (e) {
+  //       debugPrint("Couldn't receive live contact $e");
+  //     }
+  //   }
+  //   return null;
+  // }
 
   // send edited message
   Future<void> onEmitEditTextMessage(

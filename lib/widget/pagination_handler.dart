@@ -16,6 +16,7 @@ class PaginationWidgetHandler extends StatefulWidget {
   final String? receiverImgUrl;
   final String? receiverUsername;
   final bool? isReverse;
+  final Widget? emptyWidget;
   final Widget Function(BuildContext context, int index) separatorBuilder;
   const PaginationWidgetHandler(
       {super.key,
@@ -27,7 +28,8 @@ class PaginationWidgetHandler extends StatefulWidget {
       this.padding,
       this.receiverImgUrl,
       this.receiverUsername,
-      this.isReverse = false});
+      this.isReverse = false,
+      this.emptyWidget});
 
   @override
   State<PaginationWidgetHandler> createState() =>
@@ -115,35 +117,38 @@ class _PaginationWidgetHandlerState extends State<PaginationWidgetHandler> {
         ),
       );
     } else {
-      return SizedBox(
-        height: MediaQuery.of(context).size.height * 0.2,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            UIHelper.imageAvatarHelper(
-                "${widget.receiverImgUrl}?token=${AppUrl.senderToken}",
-                size: 80),
-            VerticalSpacing.medium,
-            UIHelper.textHelper(
-                text: widget.receiverUsername ?? "",
-                fontSize: FontSize.fontSizeBig,
-                fontWeight: FontWeight.bold),
-            VerticalSpacing.regular,
-            if (widget.itemCount > 0) ...[
-              const SizedBox.shrink()
-            ] else ...[
-              Container(
-                padding: AppGap.smallGap,
-                decoration: BoxDecoration(
-                    borderRadius: AppRadius.regular,
-                    color: AppColors.primary.withOpacity(0.2)),
-                child: UIHelper.textHelper(text: "Visit Profile"),
-              ),
-            ]
-          ],
-        ),
-      );
+      return widget.emptyWidget ??
+          SizedBox(
+            height: widget.itemCount <= 10
+                ? MediaQuery.of(context).size.height * 0.6
+                : MediaQuery.of(context).size.height * 0.2,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                UIHelper.imageAvatarHelper(
+                    "${widget.receiverImgUrl}?token=${AppUrl.senderToken}",
+                    size: 80),
+                VerticalSpacing.medium,
+                UIHelper.textHelper(
+                    text: widget.receiverUsername ?? "",
+                    fontSize: FontSize.fontSizeBig,
+                    fontWeight: FontWeight.bold),
+                VerticalSpacing.regular,
+                if (widget.itemCount > 0) ...[
+                  const SizedBox.shrink()
+                ] else ...[
+                  Container(
+                    padding: AppGap.smallGap,
+                    decoration: BoxDecoration(
+                        borderRadius: AppRadius.regular,
+                        color: AppColors.primary.withOpacity(0.2)),
+                    child: UIHelper.textHelper(text: "Visit Profile"),
+                  ),
+                ]
+              ],
+            ),
+          );
     }
   }
 }

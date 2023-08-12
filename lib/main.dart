@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:travel_go/constant/app_theme.dart';
+import 'package:travel_go/provider/message/contact_handler.dart';
 import 'package:travel_go/provider/message/message_handler.dart';
 import 'package:travel_go/view/root.dart';
 
@@ -18,6 +19,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => MessageHandler()),
+        ChangeNotifierProvider(create: (_) => ContactHandler())
       ],
       child: MaterialApp(
         title: 'Flutter Demo',

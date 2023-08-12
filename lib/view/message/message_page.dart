@@ -9,10 +9,11 @@ import 'package:travel_go/view/message/utility/sender_action.dart';
 import 'package:travel_go/view/message/widget/message_appbar.dart';
 import 'package:travel_go/widget/loading_helper.dart';
 
-import '../../constant/app_url.dart';
-
 class MessagePage extends StatefulWidget {
-  const MessagePage({super.key});
+  final String chatId;
+  final String receiverId;
+  const MessagePage(
+      {super.key, required this.chatId, required this.receiverId});
 
   @override
   State<MessagePage> createState() => _MessagePageState();
@@ -32,7 +33,8 @@ class _MessagePageState extends State<MessagePage> {
   }
 
   Future<ReceiverModel?> onInitData() async {
-    final data = await messageHandler.onGetReceiverInfo();
+    final data =
+        await messageHandler.onGetReceiverInfo(receiverId: widget.receiverId);
     return data;
   }
 
@@ -40,9 +42,9 @@ class _MessagePageState extends State<MessagePage> {
     Provider.of<MessageHandler>(context, listen: false);
     socketService = SocketService();
     socketService.initSocket();
-    socketService.onEmitToSeenAllMessage(chatId: AppUrl.chatId);
+    socketService.onEmitToSeenAllMessage(chatId: widget.chatId);
     messageHandler.onGetChatByID(
-        chatId: AppUrl.chatId, context: context, pageKey: pageKey);
+        chatId: widget.chatId, context: context, pageKey: pageKey);
   }
 
   @override
@@ -83,7 +85,7 @@ class _MessagePageState extends State<MessagePage> {
                                           10)
                                       .ceil();
                           await socketService.onEmitMessage(
-                              chatId: AppUrl.chatId, pageKey: pageKey);
+                              chatId: widget.chatId, pageKey: pageKey);
                         }
                       },
                     )),
@@ -103,7 +105,7 @@ class _MessagePageState extends State<MessagePage> {
                     //     }
                     //   },
                     // ),
-                    const SenderActionWidget(),
+                    SenderActionWidget(chatId: widget.chatId),
                   ],
                 )),
           );

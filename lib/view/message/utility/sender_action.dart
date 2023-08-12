@@ -12,7 +12,8 @@ import 'package:travel_go/view/message/utility/widget/image_preview.dart';
 import 'package:travel_go/view/message/utility/widget/sender_text_field.dart';
 
 class SenderActionWidget extends StatelessWidget {
-  const SenderActionWidget({super.key});
+  final String chatId;
+  const SenderActionWidget({super.key, required this.chatId});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +29,7 @@ class SenderActionWidget extends StatelessWidget {
                 provider.onResetEdit();
               },
               onUpdateMessage: () {
-                provider.onEditTextMessage();
+                provider.onEditTextMessage(chatId: chatId);
               });
         } else {
           return StreamBuilder<bool>(
@@ -61,14 +62,15 @@ class SenderActionWidget extends StatelessWidget {
                         if (provider.sendMessageType ==
                             SendMessageType.imageMessage) {
                           provider
-                              .onSendImageMessage(provider.imageValue)
+                              .onSendImageMessage(
+                                  chatId: "", photoBase64: provider.imageValue)
                               .then((value) {
                             if (provider.textMessageCT.text.isNotEmpty) {
-                              provider.onSendTextMessage();
+                              provider.onSendTextMessage(chatId: chatId);
                             }
                           }).whenComplete(() => provider.onResetImageValue());
                         } else {
-                          provider.onSendTextMessage();
+                          provider.onSendTextMessage(chatId: chatId);
                         }
                       },
                     ),
