@@ -17,7 +17,7 @@ import 'package:travel_go/socket/response_type.dart';
 import 'package:travel_go/socket/socket_route.dart';
 
 import '../constant/http_method.dart';
-import '../model/message/receiver_model.dart';
+import '../model/receiver_model.dart';
 
 class SocketService {
   static const String transportsMethod = "websocket";

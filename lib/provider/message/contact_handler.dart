@@ -3,15 +3,20 @@ import 'package:travel_go/constant/app_url.dart';
 import 'package:travel_go/model/chat/contact_model.dart';
 import 'package:collection/collection.dart';
 import 'package:travel_go/model/message/personal_message.dart';
+import 'package:travel_go/model/receiver_model.dart';
+import 'package:travel_go/socket/socket_service.dart';
 
 class ContactHandler with ChangeNotifier {
+  final SocketService _socketService = SocketService();
+
   final List<UserContactModel> _userContactList = [];
 
   List<UserContactModel> get userContactList => _userContactList;
 
   // final List<UserContactModel> _liveContactList = [];
   // List<UserContactModel> get liveContactList => _liveContactList;
-
+  ReceiverModel? _receiverModel;
+  ReceiverModel? get receiverModel => _receiverModel;
   num _unReadCount = 0;
 
   num? get unReadCount => _unReadCount;
@@ -66,15 +71,14 @@ class ContactHandler with ChangeNotifier {
         return true;
       } else {
         debugPrint("diff chat ID");
-        /**
-         * ! this when we receive first message from another sender (other user)
-         * ! receiver (Yourself)
-         * */
-
-
         return false;
       }
     });
+    /**
+     * ! this when we receive first message from another sender (other user)
+     * ! receiver (Yourself)
+     * */
+    onAddNewIncomingMessage(personalMessageModel: liveValue);
     notifyListeners();
   }
 
@@ -112,6 +116,43 @@ class ContactHandler with ChangeNotifier {
         }),
       ),
     );
+  }
+
+  Future<ReceiverModel?> onGetReceiverInfo({required String receiverId}) async {
+    _receiverModel = await _socketService.onGetUserProfile(id: receiverId);
+    return _receiverModel;
+  }
+
+  Future<void> onAddNewIncomingMessage(
+      {PersonalMessageModel? personalMessageModel}) async {
+    if (personalMessageModel?.senderId != null) {
+      await onGetReceiverInfo(receiverId: personalMessageModel?.senderId ?? "")
+          .then(
+        (receiverValue) {
+          debugPrint("incoming message from ${receiverValue?.firstName}");
+
+          onAddLiveItemToContactList(
+            UserContactModel(
+                unreadMessagesCount: 1,
+                receiver: [
+                  // receiver (Other)
+                  ReceiverModel(
+                      id: receiverValue?.id,
+                      lastName: receiverValue?.lastName,
+                      firstName: receiverValue?.firstName,
+                      photoUrl: receiverValue?.photoUrl),
+                  // Sender (Yourself)
+                  ReceiverModel(
+                      id: AppUrl.senderId,
+                      lastName: "Lim",
+                      firstName: "Chhily",
+                      photoUrl: receiverValue?.photoUrl),
+                ],
+                lastMessage: personalMessageModel),
+          );
+        },
+      );
+    }
   }
 
   void onDispose() {

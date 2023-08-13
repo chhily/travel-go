@@ -5,6 +5,7 @@ class ReceiverModel {
   String? photoUrl;
   bool? isOnline;
   bool? isSubscribe;
+  String? fullName;
 
   ReceiverModel(
       {this.id,
@@ -12,6 +13,7 @@ class ReceiverModel {
       this.lastName,
       this.photoUrl,
       this.isOnline,
+      this.fullName,
       this.isSubscribe});
 
   factory ReceiverModel.fromJson(Map<String, dynamic> json) {
@@ -21,6 +23,7 @@ class ReceiverModel {
       lastName: json['last_name'],
       photoUrl: json['photo_url'],
       isOnline: json['online'] ?? false,
+      fullName: "${json['last_name']} ${json['first_name']}",
       // isSubscribe:
       //     (json['is_subscribed'] == null || json['is_followed'] == null)
       //         ? false

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:travel_go/constant/app_color.dart';
-import 'package:travel_go/model/message/receiver_model.dart';
+import 'package:travel_go/model/receiver_model.dart';
 import 'package:travel_go/provider/message/message_handler.dart';
 import 'package:travel_go/socket/socket_service.dart';
 import 'package:travel_go/view/message/message_list.dart';
