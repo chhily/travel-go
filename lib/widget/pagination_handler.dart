@@ -15,7 +15,7 @@ class PaginationWidgetHandler extends StatefulWidget {
   final EdgeInsetsGeometry? padding;
   final String? receiverImgUrl;
   final String? receiverUsername;
-  final bool? isReverse;
+  final bool isReverse;
   final Widget? emptyWidget;
   final Widget Function(BuildContext context, int index) separatorBuilder;
   const PaginationWidgetHandler(
@@ -28,7 +28,7 @@ class PaginationWidgetHandler extends StatefulWidget {
       this.padding,
       this.receiverImgUrl,
       this.receiverUsername,
-      this.isReverse = false,
+      required this.isReverse,
       this.emptyWidget});
 
   @override
@@ -38,7 +38,6 @@ class PaginationWidgetHandler extends StatefulWidget {
 
 class _PaginationWidgetHandlerState extends State<PaginationWidgetHandler> {
   ScrollController? scrollController;
-  bool isInit = false;
   int loadingState = 0;
   void scrollListener(ScrollController? controller) {
     if (controller == null) return;
@@ -80,14 +79,13 @@ class _PaginationWidgetHandlerState extends State<PaginationWidgetHandler> {
   @override
   void dispose() {
     scrollController?.dispose();
-    isInit = false;
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-        reverse: widget.isReverse ?? false,
+        reverse: widget.isReverse,
         controller: scrollController,
         padding: widget.padding ?? AppGap.mediumGap,
         itemBuilder: (context, index) {

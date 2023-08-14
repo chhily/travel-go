@@ -100,7 +100,8 @@ class SocketService {
         await onGetAllUserContact(jsonValue).then(
           (contactList) {
             if (contactList != null) {
-              contactHandler.onGetUserContactList(contactList.userContactModel);
+              contactHandler.onGetUserContactList(contactList);
+              contactHandler.onGetContactPagination(contactList.pagination);
               // contactHandler.onGetLiveContactList(contactList.userContactModel);
             } else {
               debugPrint("this is another event of receive data");
@@ -111,7 +112,7 @@ class SocketService {
           (liveContact) {
             print("live contact value $liveContact");
             if (liveContact != null) {
-              contactHandler.onUpdateLiveContactValue(liveContact);
+              contactHandler.onHandlerIncomingMessage(liveContact);
             }
           },
         );
@@ -203,7 +204,7 @@ class SocketService {
      */
     socket.emit(SocketRoute.pubChatById, {
       "chat_id": chatId,
-      "per_page": 15,
+      "per_page": 10,
       "page_number": pageKey,
       "order_by": "DESC",
     });

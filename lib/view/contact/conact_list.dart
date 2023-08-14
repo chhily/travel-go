@@ -17,31 +17,45 @@ class ContactListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<ContactHandler>(
       builder: (context, valueProvider, child) {
+        print(
+            "${valueProvider.contactPagination?.total} ${valueProvider.userContactList.length}");
         final contactList = valueProvider.userContactList;
+
         return PaginationWidgetHandler(
+          isReverse: false,
           emptyWidget: const SizedBox.shrink(),
-          hasMoreData: false,
+          hasMoreData: valueProvider.contactPagination != null
+              ? contactList.length < valueProvider.contactPagination!.total
+              : false,
           dataLoader: dataLoader,
           separatorBuilder: (context, index) => VerticalSpacing.medium,
-          itemCount: valueProvider.userContactList.length,
+          itemCount: contactList.length,
           itemWidget: (context, index) {
             final itemValue = contactList.elementAt(index);
             final receiver = itemValue.receiver
                 ?.firstWhereOrNull((element) => element.id != AppUrl.senderId);
-            return ItemContactWidget(
-              receiverInfo: receiver,
-              timeAgo: itemValue.lastMessage?.createdAt,
-              unReadCount: itemValue.unreadMessagesCount,
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(
-                  builder: (context) {
-                    return MessagePage(
-                      chatId: itemValue.id ?? "",
-                      receiverId: receiver?.id ?? "",
-                    );
+            return Column(
+              children: [
+                ItemContactWidget(
+                  receiverInfo: receiver,
+                  timeAgo: itemValue.lastMessage?.createdAt,
+                  unReadCount: itemValue.unreadMessagesCount,
+                  personalMessageModel: itemValue.lastMessage,
+                  lastMessage:
+                      valueProvider.onChangeLastMessage(itemValue.lastMessage),
+                  onTap: () {
+                    debugPrint("receiver id ${receiver?.id}, ${itemValue.id}");
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) {
+                        return MessagePage(
+                          chatId: itemValue.id ?? "",
+                          receiverId: receiver?.id ?? "",
+                        );
+                      },
+                    ));
                   },
-                ));
-              },
+                ),
+              ],
             );
           },
         );

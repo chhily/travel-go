@@ -14,6 +14,7 @@ class ContactPage extends StatefulWidget {
 class _ContactPageState extends State<ContactPage> {
   late SocketService socketService;
   late ContactHandler contactHandler;
+  int pageKey = 1;
 
   @override
   void initState() {
@@ -26,7 +27,9 @@ class _ContactPageState extends State<ContactPage> {
   Future<void> onInit() async {
     socketService = SocketService();
     socketService.initSocket();
-    await socketService.onEmitUserContactList(pageKey: 1).then((value) async {
+    await socketService
+        .onEmitUserContactList(pageKey: pageKey)
+        .then((value) async {
       await socketService.onSubUserContactList(context: context);
     });
   }
@@ -43,7 +46,22 @@ class _ContactPageState extends State<ContactPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: const ContactListWidget(),
+      body: SizedBox(
+        child: ContactListWidget(
+          dataLoader: () async {
+            debugPrint("on fetch more data");
+            if (contactHandler.userContactList.length >= 10) {
+              debugPrint("length is greater than 10");
+              pageKey += 1;
+              contactHandler.userContactList.isNotEmpty &&
+                  pageKey <=
+                      (contactHandler.contactListModel!.pagination!.total / 10)
+                          .ceil();
+              await socketService.onEmitUserContactList(pageKey: pageKey);
+            }
+          },
+        ),
+      ),
     );
   }
 }

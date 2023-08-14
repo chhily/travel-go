@@ -4,23 +4,27 @@ import 'package:travel_go/constant/app_color.dart';
 import 'package:travel_go/constant/app_size.dart';
 import 'package:travel_go/constant/app_spacing.dart';
 import 'package:travel_go/constant/app_url.dart';
+import 'package:travel_go/model/message/personal_message.dart';
 import 'package:travel_go/model/receiver_model.dart';
 import 'package:travel_go/provider/message/contact_handler.dart';
 import 'package:travel_go/util/app_helper.dart';
 import 'package:travel_go/util/ui_helper.dart';
 
-
 class ItemContactWidget extends StatelessWidget {
   final ReceiverModel? receiverInfo;
   final DateTime? timeAgo;
   final num? unReadCount;
+  final String? lastMessage;
+  final PersonalMessageModel? personalMessageModel;
   final void Function()? onTap;
   const ItemContactWidget(
       {super.key,
       required this.receiverInfo,
       this.timeAgo,
       this.unReadCount,
-      this.onTap});
+      this.onTap,
+      this.lastMessage,
+      this.personalMessageModel});
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +60,7 @@ class ItemContactWidget extends StatelessWidget {
                     ),
                   ),
                   VerticalSpacing.small,
-                  UIHelper.textHelper(text: "Last Message")
+                  UIHelper.textHelper(text: lastMessage ?? "N/A"),
                 ],
               ),
               const Spacer(),
@@ -65,7 +69,7 @@ class ItemContactWidget extends StatelessWidget {
                   if (valueListener.unReadCount == 0) {
                     if (unReadCount == 0 || unReadCount == null) {
                       return const SizedBox.shrink();
-                    }else {
+                    } else {
                       return Container(
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
