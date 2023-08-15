@@ -231,6 +231,15 @@ class SocketService {
     });
   }
 
+  Future<void> onSeen(
+      {required BuildContext context, required String chatId}) async {
+    final messageHandler = Provider.of<MessageHandler>(context, listen: false);
+    socket.on("${SocketRoute.onGetChatById}/$chatId", (jsonValue) async {
+      await onSeenLiveMessage(jsonValue)
+          .then((value) => messageHandler.onUpdateSeenMessage(value?.success));
+    });
+  }
+
   Future<PersonalMessageListModel?> onReceiveAllMessage(
       {dynamic handler, required BuildContext context}) async {
     /**

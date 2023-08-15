@@ -6,6 +6,7 @@ class AppUrl {
   // 64d45445b116b962116923d5
   static const String receiverId = "64d45445b116b962116923d5";
   //6139b0241eab37545f258b59 for a lot of data
+  // lim chhily
   static const String senderId = "6359fb7d96cd484ba17e54f7";
   // 64d598e50a5d5a6b0cf06f64
   static const String chatId = "64d598e50a5d5a6b0cf06f64";

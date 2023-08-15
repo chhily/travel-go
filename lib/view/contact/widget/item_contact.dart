@@ -8,7 +8,9 @@ import 'package:travel_go/model/message/personal_message.dart';
 import 'package:travel_go/model/receiver_model.dart';
 import 'package:travel_go/provider/message/contact_handler.dart';
 import 'package:travel_go/util/app_helper.dart';
+import 'package:travel_go/util/extention.dart';
 import 'package:travel_go/util/ui_helper.dart';
+import 'package:travel_go/view/root.dart';
 
 class ItemContactWidget extends StatelessWidget {
   final ReceiverModel? receiverInfo;
@@ -60,7 +62,10 @@ class ItemContactWidget extends StatelessWidget {
                     ),
                   ),
                   VerticalSpacing.small,
-                  UIHelper.textHelper(text: lastMessage ?? "N/A"),
+                  SizedBox(
+                      width: TravelGoExtension(context).mediaQuery.size.width * 0.5,
+                      child: UIHelper.textHelper(
+                          text: lastMessage ?? "N/A", maxLines: 1)),
                 ],
               ),
               const Spacer(),

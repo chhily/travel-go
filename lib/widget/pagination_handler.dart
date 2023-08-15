@@ -36,8 +36,10 @@ class PaginationWidgetHandler extends StatefulWidget {
       _PaginationWidgetHandlerState();
 }
 
-class _PaginationWidgetHandlerState extends State<PaginationWidgetHandler> {
+class _PaginationWidgetHandlerState extends State<PaginationWidgetHandler>
+    with WidgetsBindingObserver {
   ScrollController? scrollController;
+  bool isFirstLoad = true;
   int loadingState = 0;
   void scrollListener(ScrollController? controller) {
     if (controller == null) return;
@@ -74,12 +76,24 @@ class _PaginationWidgetHandlerState extends State<PaginationWidgetHandler> {
     // TODO: implement initState
     super.initState();
     initController();
+    isFirstLoad = true;
+    if (!mounted) return;
   }
 
   @override
   void dispose() {
     scrollController?.dispose();
     super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(covariant PaginationWidgetHandler oldWidget) {
+    // TODO: implement didUpdateWidget
+    if (oldWidget.hasMoreData != widget.hasMoreData && isFirstLoad) {
+      onLoadingMoreData();
+      isFirstLoad = false;
+    }
+    super.didUpdateWidget(oldWidget);
   }
 
   @override

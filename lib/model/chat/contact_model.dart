@@ -36,7 +36,7 @@ class UserContactModel {
   final List<ReceiverModel>? receiver;
   final String? dataId;
   final String? id;
-  final int? unreadMessagesCount;
+  int? unreadMessagesCount;
   final PersonalMessageModel? lastMessage;
   final dynamic shop;
 

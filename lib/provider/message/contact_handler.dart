@@ -68,7 +68,9 @@ class ContactHandler with ChangeNotifier {
               id: eachValue.id,
               dataId: eachValue.dataId,
               lastMessage: liveValue,
-              unreadMessagesCount: 1,
+              unreadMessagesCount: eachValue.unreadMessagesCount != null
+                  ? eachValue.unreadMessagesCount! + 1
+                  : 1,
               receiver: eachValue.receiver,
               // unreadMessagesCount: 2
             ));
@@ -112,6 +114,14 @@ class ContactHandler with ChangeNotifier {
   onHandlerIncomingMessage(PersonalMessageModel? incomingMessage) {
     onUpdateLiveContactValue(incomingMessage);
     // onAddNewIncomingMessage(personalMessageModel: incomingMessage);
+  }
+
+  onFindAndRemove(
+      UserContactModel? currentList, PersonalMessageModel? incomingMessage) {
+    debugPrint("${currentList?.id} ${incomingMessage?.id}");
+    if (currentList?.id == incomingMessage?.id) {
+      _userContactList.remove(currentList);
+    }
   }
 
   Future<void> onRemoveCurrentLiveContact(int index) async {
@@ -161,27 +171,49 @@ class ContactHandler with ChangeNotifier {
       await onGetReceiverInfo(receiverId: personalMessageModel?.senderId ?? "")
           .then(
         (receiverValue) {
+          // for (var element in _userContactList) {
+          //   print(element.id);
+          // }
           _userContactList.firstWhereOrNull((eachValue) {
+            print("id of eachValue ${eachValue.id}");
+
+            /**
+             * ! This when has new user contact you
+             * ! Will on top the list
+             * * if(senderId != current userId)Sender (Yourself)
+             * * else if (senderId == current userId)Receiver (Yourself)
+             * */
             if (eachValue.id != personalMessageModel?.chatId) {
-              onAddLiveItemToContactList(UserContactModel(
-                  unreadMessagesCount: 1,
-                  receiver: [
-                    // receiver (Other)
-                    ReceiverModel(
-                        id: receiverValue?.id,
-                        lastName: receiverValue?.lastName,
-                        firstName: receiverValue?.firstName,
-                        photoUrl: receiverValue?.photoUrl),
-                    // Sender (Yourself)
-                    ReceiverModel(
-                        id: AppUrl.senderId,
-                        lastName: "Lim",
-                        firstName: "Chhily",
-                        photoUrl: receiverValue?.photoUrl),
-                  ],
-                  lastMessage: personalMessageModel));
+              /**
+              * ! Add another receiver to list
+              */
+              if (personalMessageModel?.senderId != AppUrl.senderId) {
+                onAddLiveItemToContactList(
+                  UserContactModel(
+                      unreadMessagesCount: 1,
+                      receiver: [
+                        // receiver (Other)
+                        ReceiverModel(
+                            id: receiverValue?.id,
+                            lastName: receiverValue?.lastName,
+                            firstName: receiverValue?.firstName,
+                            photoUrl: receiverValue?.photoUrl),
+                        // Sender (Yourself)
+                        ReceiverModel(
+                            id: AppUrl.senderId,
+                            lastName: "Lim",
+                            firstName: "Chhily",
+                            photoUrl: receiverValue?.photoUrl),
+                      ],
+                      lastMessage: personalMessageModel),
+                );
+              } else {
+                debugPrint("Unknown case of incoming message");
+              }
+              return true;
+            } else {
+              return false;
             }
-            return true;
           });
           debugPrint("incoming message from ${receiverValue?.firstName}");
         },
@@ -213,6 +245,7 @@ class ContactHandler with ChangeNotifier {
   void onDispose() {
     _userContactList.clear();
     _receiverModel = null;
+    _contactPagination = null;
     _lastMessage = null;
     // _liveContactList.clear();
   }

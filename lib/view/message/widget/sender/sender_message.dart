@@ -27,7 +27,7 @@ class SenderMessageWidget extends StatelessWidget {
         child: UIHelper.textHelper(
           text: message.trim(),
           textColor: AppColors.white,
-          maxLines: message.length,
+          maxLines: message.isNotEmpty ? message.length : null,
         ),
       ),
     );

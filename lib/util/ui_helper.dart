@@ -98,8 +98,8 @@ class UIHelper {
             url,
             errorBuilder: (context, error, stackTrace) {
               return const Icon(
-                FontAwesomeIcons.user,
-                color: AppColors.secondary,
+                FontAwesomeIcons.userNinja,
+                color: AppColors.white,
               );
             },
           ),
@@ -163,9 +163,6 @@ class UIHelper {
           child: const Icon(Icons.error, size: 40)),
     );
   }
-
-
-
 
   static loadingDialogHelper(BuildContext context) {
     showDialog(

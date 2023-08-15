@@ -4,6 +4,7 @@ import 'package:travel_go/constant/app_color.dart';
 import 'package:travel_go/model/receiver_model.dart';
 import 'package:travel_go/provider/message/message_handler.dart';
 import 'package:travel_go/socket/socket_service.dart';
+import 'package:travel_go/util/extention.dart';
 import 'package:travel_go/view/message/message_list.dart';
 import 'package:travel_go/view/message/utility/sender_action.dart';
 import 'package:travel_go/view/message/widget/message_appbar.dart';
@@ -65,7 +66,10 @@ class _MessagePageState extends State<MessagePage> {
           return const LoadingHelper();
         } else {
           return GestureDetector(
-            onTap: () => FocusScope.of(context).unfocus(),
+            onTap: () {
+              socketService.onSeen(chatId: widget.chatId, context: context);
+              TravelGoExtension(context).hideKeyboard();
+            },
             child: Scaffold(
                 backgroundColor: AppColors.white,
                 appBar: MessageAppBar(

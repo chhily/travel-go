@@ -17,8 +17,6 @@ class ContactListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<ContactHandler>(
       builder: (context, valueProvider, child) {
-        print(
-            "${valueProvider.contactPagination?.total} ${valueProvider.userContactList.length}");
         final contactList = valueProvider.userContactList;
 
         return PaginationWidgetHandler(
@@ -34,6 +32,7 @@ class ContactListWidget extends StatelessWidget {
             final itemValue = contactList.elementAt(index);
             final receiver = itemValue.receiver
                 ?.firstWhereOrNull((element) => element.id != AppUrl.senderId);
+
             return Column(
               children: [
                 ItemContactWidget(

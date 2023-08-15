@@ -37,7 +37,9 @@ class _ContactPageState extends State<ContactPage> {
   @override
   void dispose() {
     // TODO: implement dispose
+
     socketService.onDisposeListener();
+
     contactHandler.onDispose();
     super.dispose();
   }
