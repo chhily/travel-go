@@ -4,10 +4,11 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:travel_go/constant/message_type.dart';
-import 'package:travel_go/model/chat/contact_model.dart';
+import 'package:travel_go/model/chat/user_contact_model.dart';
 import 'package:travel_go/model/message/personal_message.dart';
 import 'package:travel_go/model/receiver_model.dart';
 import 'package:travel_go/model/pagination.dart';
+import 'package:travel_go/model/receiver_store.dart';
 
 import '../../socket/socket_service.dart';
 import 'package:image_picker/image_picker.dart';
@@ -46,6 +47,8 @@ class MessageHandler with ChangeNotifier {
 
   ReceiverModel? _receiverModel;
   ReceiverModel? get receiverInfo => _receiverModel;
+  ReceiverStoreModel? _receiverStoreModel;
+  ReceiverStoreModel? get receiverStoreInfo => _receiverStoreModel;
 
   XFile? _imageFile;
   XFile? get imageFile => _imageFile;
@@ -76,9 +79,15 @@ class MessageHandler with ChangeNotifier {
   }
 
   Future<ReceiverModel?> onGetReceiverInfo({required String receiverId}) async {
-    _receiverModel =
-        await _socketService.onGetUserProfile(id: receiverId);
+    _receiverModel = await _socketService.onGetUserProfile(id: receiverId);
     return _receiverModel;
+  }
+
+  Future<ReceiverStoreModel?> onGetStoreReceiverInfo(
+      {required String receiverId}) async {
+    _receiverStoreModel =
+        await _socketService.onGetStoreProfile(id: receiverId);
+    return _receiverStoreModel;
   }
 
   bool loading = false;
@@ -246,5 +255,6 @@ class MessageHandler with ChangeNotifier {
     _sendMessageType = null;
     onClearPagination();
     _receiverModel = null;
+    _receiverStoreModel = null;
   }
 }

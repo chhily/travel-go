@@ -3,16 +3,20 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
+
 // ignore: library_prefixes
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:travel_go/base/base_dio_handler.dart';
 import 'package:travel_go/constant/app_url.dart';
-import 'package:travel_go/model/chat/contact_model.dart';
+import 'package:travel_go/model/chat/store_contact_model.dart';
+import 'package:travel_go/model/chat/user_contact_model.dart';
 import 'package:travel_go/model/message/personal_message.dart';
 import 'package:travel_go/model/message/seen_message.dart';
 import 'package:travel_go/model/message/sender_receiver_model.dart';
+import 'package:travel_go/model/receiver_store.dart';
 import 'package:travel_go/provider/message/contact_handler.dart';
 import 'package:travel_go/provider/message/message_handler.dart';
+import 'package:travel_go/provider/message/user_store_handler.dart';
 import 'package:travel_go/socket/response_type.dart';
 import 'package:travel_go/socket/socket_route.dart';
 
@@ -24,7 +28,6 @@ class SocketService {
   static late IO.Socket socket;
 
   //First step init socket {}
-
   void initSocket() {
     // manually connecting to websocket
     try {
@@ -81,78 +84,127 @@ class SocketService {
     log("create chat ${SocketRoute.onCreateChat}, {users: $senderId}");
   }
 
-  //User to User list
+  //User to Users list
   Future<void> onEmitUserContactList({required int pageKey}) async {
     socket.emit(SocketRoute.pubUsersChatList,
         {"per_page": 10, "page_number": pageKey, "order_by": "DESC"});
-    log("pubChatLists ${SocketRoute.pubUsersChatList}, {per_page: 10, page_number: $pageKey, order_by: DESC");
+    log("pubChatLists ${SocketRoute.pubUsersChatList}, {per_page: 10, "
+        "page_number:"
+        " $pageKey, order_by: DESC");
   }
 
-  //sub to receive contact list from socket
+  //User to Stores list
+
+  Future<void> onEmitUserStoresContactList({required int pageKey}) async {
+    socket.emit(SocketRoute.pubShopChatLists,
+        {"per_page": 10, "page_number": pageKey, "order_by": "DESC"});
+    log("pubChatLists ${SocketRoute.pubShopChatLists}, "
+        "{per_page: 10, page_number:"
+        " $pageKey, order_by: DESC");
+  }
+
+  //sub to receive user to users contact list from socket
   Future<void> onSubUserContactList({required BuildContext context}) async {
-    final contactHandler = Provider.of<ContactHandler>(context, listen: false);
+    final contactHandler =
+        Provider.of<UserContactHandler>(context, listen: false);
     socket.on(
       SocketRoute.onGetUserChatListsChange,
       (jsonValue) async {
         /**
-       * ! first get all contact list
-       * */
-        await onGetAllUserContact(jsonValue).then(
-          (contactList) {
-            if (contactList != null) {
-              contactHandler.onGetUserContactList(contactList);
-              contactHandler.onGetContactPagination(contactList.pagination);
-              // contactHandler.onGetLiveContactList(contactList.userContactModel);
-            } else {
-              debugPrint("this is another event of receive data");
-            }
-          },
-        );
-        await onReceiveLiveContact(jsonValue).then(
-          (liveContact) {
-            print("live contact value $liveContact");
-            if (liveContact != null) {
-              contactHandler.onHandlerIncomingMessage(liveContact);
-            }
-          },
-        );
+         * ! first get all contact list
+         * */
+        if (jsonValue[ResponseField.actionField] == ResponseField.actionGet) {
+          await onGetAllUsersContact(jsonValue).then(
+            (contactList) {
+              if (contactList != null) {
+                contactHandler.onGetUserContactList(contactList);
+                contactHandler.onGetContactPagination(contactList.pagination);
+                // contactHandler.onGetLiveContactList(contactList.userContactModel);
+              } else {
+                debugPrint("this is another event of receive data");
+              }
+            },
+          );
+        }
+        if (jsonValue[ResponseField.actionField] == ResponseField.actionNew) {
+          await onReceiveUsersLiveContact(jsonValue).then(
+            (liveContact) {
+              if (liveContact != null) {
+                contactHandler.onHandlerIncomingMessage(liveContact);
+              }
+            },
+          );
+        }
       },
     );
   }
 
-  Future<ContactListModel?> onGetAllUserContact(dynamic jsonValue) async {
-    if (jsonValue[ResponseField.actionField] == ResponseField.actionGet) {
-      debugPrint("action get");
-      try {
-        final contactList =
-            ContactListModel.fromJson(jsonValue[ResponseField.dataField]);
-        prettyPrintJson(jsonValue[ResponseField.dataField],
-            msg: "user contact list");
-        debugPrint("contact list $contactList");
-        return contactList;
-      } catch (e) {
-        debugPrint("couldn't receiver user contact list $e");
-      }
+  Future<UsersContactListModel?> onGetAllUsersContact(dynamic jsonValue) async {
+    debugPrint("action get");
+    try {
+      final contactList =
+          UsersContactListModel.fromJson(jsonValue[ResponseField.dataField]);
+      prettyPrintJson(jsonValue[ResponseField.dataField],
+          msg: "user contact list");
+      debugPrint("contact list $contactList");
+      return contactList;
+    } catch (e) {
+      debugPrint("couldn't receiver user contact list $e");
     }
     return null;
   }
 
-  Future<PersonalMessageModel?> onReceiveLiveContact(dynamic jsonValue) async {
-    if (jsonValue[ResponseField.actionField] == ResponseField.actionNew) {
-      debugPrint("action new");
-      try {
-        final liveContact =
-            PersonalMessageModel.fromJson(jsonValue[ResponseField.dataField]);
-        prettyPrintJson(jsonValue[ResponseField.dataField],
-            msg: "user live contact list");
-        debugPrint("live contact list $liveContact");
-        return liveContact;
-      } catch (e) {
-        debugPrint("couldn't receiver user live contact list $e");
-      }
+  Future<PersonalMessageModel?> onReceiveUsersLiveContact(
+      dynamic jsonValue) async {
+    try {
+      final liveContact =
+          PersonalMessageModel.fromJson(jsonValue[ResponseField.dataField]);
+      prettyPrintJson(jsonValue[ResponseField.dataField],
+          msg: "user live contact list");
+      debugPrint("live contact list $liveContact");
+      return liveContact;
+    } catch (e) {
+      debugPrint("couldn't receiver user live contact list $e");
     }
     return null;
   }
+
+  Future<void> onSubUserStoresContactList(
+      {required BuildContext context}) async {
+    final userToStoreHandler =
+        Provider.of<UserToStoreHandler>(context, listen: false);
+    socket.on(SocketRoute.onGetShopChatListsChange, (jsonValue) async {
+      log("onSubGetChatLists ${SocketRoute.onGetShopChatListsChange} $jsonValue");
+      if (jsonValue[ResponseField.actionField] == ResponseField.actionGet) {
+        await onGetAllUserStoresContact(jsonValue).then(
+          (userStoresList) {
+            if (userStoresList != null) {
+              userToStoreHandler.onGetUserStoreContactList(userStoresList);
+            }
+          },
+        );
+      }
+      if (jsonValue[ResponseField.actionField] == ResponseField.actionNew) {
+        debugPrint(
+            "User to Stores action new ${jsonValue[ResponseField.dataField]}");
+      }
+    });
+  }
+
+  Future<StoreUserContactListModel?> onGetAllUserStoresContact(
+      dynamic jsonValue) async {
+    try {
+      final userStoresContact = StoreUserContactListModel.fromJson(
+          jsonValue[ResponseField.dataField]);
+      prettyPrintJson(jsonValue[ResponseField.dataField],
+          msg: "User stores contact list");
+      return userStoresContact;
+    } catch (e) {
+      debugPrint("couldn't receiver user stores contact list $e");
+    }
+    return null;
+  }
+
   //
   // Future<UserContactModel?> onReceiveLiveContact(dynamic jsonValue) async {
   //   if (jsonValue[ResponseField.actionField] == ResponseField.actionNew) {
@@ -167,6 +219,7 @@ class SocketService {
   // }
 
   // send edited message
+
   Future<void> onEmitEditTextMessage(
       {required String chatId,
       required String messageId,
@@ -220,14 +273,22 @@ class SocketService {
        * * this event is to handle data from socket
        * ! to get data from sender(another user) -> receiver(yourself)
        */
-      await onReceiveAllMessage(handler: jsonValue, context: context)
-          .then((value) => messageHandler.onInitPersonalMessageList(value));
-      await onReceiveLiveMessage(jsonValue)
-          .then((value) => messageHandler.onUpdateLiveMessage(value));
-      await onUpdateEditedMessage(jsonValue)
-          .then((value) => messageHandler.onEditSenderMessage(value));
+
+      if (jsonValue[ResponseField.actionField] == ResponseField.actionGet) {
+        await onReceiveAllMessage(handler: jsonValue, context: context)
+            .then((value) => messageHandler.onInitPersonalMessageList(value));
+      }
+      if (jsonValue[ResponseField.actionField] == ResponseField.actionNew) {
+        await onReceiveLiveMessage(jsonValue)
+            .then((value) => messageHandler.onUpdateLiveMessage(value));
+      }
+      if (jsonValue[ResponseField.actionField] == ResponseField.actionEdit) {
+        await onUpdateEditedMessage(jsonValue)
+            .then((value) => messageHandler.onEditSenderMessage(value));
+      }
       await onSeenLiveMessage(jsonValue)
-          .then((value) => messageHandler.onUpdateSeenMessage(value?.success));
+          .then((value) => messageHandler.onUpdateSeenMessage(value?.success))
+          .whenComplete(() => UserContactModel(unreadMessagesCount: 0));
     });
   }
 
@@ -248,17 +309,15 @@ class SocketService {
     try {
       //* receive from socket
       //TODO: should add to details list
-      if (handler[ResponseField.actionField] == ResponseField.actionGet) {
-        final personalReceiveMessage =
-            PersonalMessageListModel.fromJson(handler[ResponseField.dataField]);
-        if (personalReceiveMessage.pagination != null) {
-          Provider.of<MessageHandler>(context, listen: false)
-              .onGetPagination(personalReceiveMessage.pagination);
-        }
-        prettyPrintJson(handler[ResponseField.dataField],
-            msg: "all data from socket");
-        return personalReceiveMessage;
+      final personalReceiveMessage =
+          PersonalMessageListModel.fromJson(handler[ResponseField.dataField]);
+      if (personalReceiveMessage.pagination != null) {
+        Provider.of<MessageHandler>(context, listen: false)
+            .onGetPagination(personalReceiveMessage.pagination);
       }
+      prettyPrintJson(handler[ResponseField.dataField],
+          msg: "all data from socket");
+      return personalReceiveMessage;
     } catch (e) {
       debugPrint("couldn't receive message ${e.toString()}");
     }
@@ -269,17 +328,15 @@ class SocketService {
     /**
      * ! get new action from socket (live chat)
      */
-    if (handler[ResponseField.actionField] == ResponseField.actionNew) {
-      try {
-        //* receive live value from sender
-        //TODO: should add to model then details list
-        final liveValue =
-            PersonalMessageModel.fromJson(handler[ResponseField.dataField]);
-        prettyPrintJson(handler[ResponseField.dataField], msg: "live message");
-        return liveValue;
-      } catch (e) {
-        debugPrint("couldn't update any receive ${e.toString()}");
-      }
+    try {
+      //* receive live value from sender
+      //TODO: should add to model then details list
+      final liveValue =
+          PersonalMessageModel.fromJson(handler[ResponseField.dataField]);
+      prettyPrintJson(handler[ResponseField.dataField], msg: "live message");
+      return liveValue;
+    } catch (e) {
+      debugPrint("couldn't update any receive ${e.toString()}");
     }
     return null;
   }
@@ -288,15 +345,13 @@ class SocketService {
     /**
      * ! on update message  (after sender || receiver edited message )
      */
-    if (jsonValue[ResponseField.actionField] == ResponseField.actionEdit) {
-      try {
-        /// user json data and set to edit by its id
-        final editedMessage =
-            PersonalMessageModel.fromJson(jsonValue[ResponseField.dataField]);
-        return editedMessage;
-      } catch (e) {
-        debugPrint("catch exception actionEdit: ${e.toString()}");
-      }
+    try {
+      /// user json data and set to edit by its id
+      final editedMessage =
+          PersonalMessageModel.fromJson(jsonValue[ResponseField.dataField]);
+      return editedMessage;
+    } catch (e) {
+      debugPrint("catch exception actionEdit: ${e.toString()}");
     }
     return null;
   }
@@ -336,6 +391,17 @@ class SocketService {
       method: HttpMethod.GET,
       onSuccess: (response) {
         return ReceiverModel.fromJson(response.data['data']);
+      },
+    );
+  }
+
+  Future<ReceiverStoreModel?> onGetStoreProfile({required String id}) async {
+    return BaseApiService().onRequest(
+      path: "/portal/shops/$id",
+      customToken: AppUrl.senderToken,
+      method: HttpMethod.GET,
+      onSuccess: (response) {
+        return ReceiverStoreModel.fromJson(response.data['data']);
       },
     );
   }

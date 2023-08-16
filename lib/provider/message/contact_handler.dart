@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:travel_go/constant/app_url.dart';
 import 'package:travel_go/constant/message_type.dart';
-import 'package:travel_go/model/chat/contact_model.dart';
+import 'package:travel_go/model/chat/user_contact_model.dart';
 import 'package:collection/collection.dart';
 import 'package:travel_go/model/message/personal_message.dart';
 import 'package:travel_go/model/pagination.dart';
 import 'package:travel_go/model/receiver_model.dart';
 import 'package:travel_go/socket/socket_service.dart';
 
-class ContactHandler with ChangeNotifier {
+class UserContactHandler with ChangeNotifier {
   final SocketService _socketService = SocketService();
 
   String? _lastMessage;
   String? get lastMessage => _lastMessage;
 
-  ContactListModel? _contactListModel;
-  ContactListModel? get contactListModel => _contactListModel;
+  UsersContactListModel? _contactListModel;
+  UsersContactListModel? get contactListModel => _contactListModel;
 
   Pagination? _contactPagination;
   Pagination? get contactPagination => _contactPagination;
@@ -28,10 +28,10 @@ class ContactHandler with ChangeNotifier {
   ReceiverModel? _receiverModel;
   ReceiverModel? get receiverModel => _receiverModel;
 
-  num _unReadCount = 0;
-  num? get unReadCount => _unReadCount;
+  // num _unReadCount = 0;
+  // num? get unReadCount => _unReadCount;
 
-  void onGetUserContactList(ContactListModel? itemList) {
+  void onGetUserContactList(UsersContactListModel? itemList) {
     if (itemList == null) return;
     _userContactList.addAll(
       itemList.userContactModel.where(
@@ -141,24 +141,24 @@ class ContactHandler with ChangeNotifier {
     notifyListeners();
   }
 
-  onGetUnReadCount(int? value) {
-    if (value == null) return;
-    _unReadCount++;
-    notifyListeners();
-  }
-
-  onAddUnreadMessage(List<UserContactModel>? itemList) {
-    if (itemList == null) return;
-    _userContactList.addAll(
-      itemList.where(
-        (firstElement) => itemList.every((secondElement) {
-          return (firstElement.unreadMessagesCount == null ||
-                  firstElement.unreadMessagesCount == 0) &&
-              firstElement.id != secondElement.id;
-        }),
-      ),
-    );
-  }
+  // onGetUnReadCount(int? value) {
+  //   if (value == null) return;
+  //   _unReadCount++;
+  //   notifyListeners();
+  // }
+  //
+  // onAddUnreadMessage(List<UserContactModel>? itemList) {
+  //   if (itemList == null) return;
+  //   _userContactList.addAll(
+  //     itemList.where(
+  //       (firstElement) => itemList.every((secondElement) {
+  //         return (firstElement.unreadMessagesCount == null ||
+  //                 firstElement.unreadMessagesCount == 0) &&
+  //             firstElement.id != secondElement.id;
+  //       }),
+  //     ),
+  //   );
+  // }
 
   Future<ReceiverModel?> onGetReceiverInfo({required String receiverId}) async {
     _receiverModel = await _socketService.onGetUserProfile(id: receiverId);
@@ -227,19 +227,16 @@ class ContactHandler with ChangeNotifier {
   }
 
   String? onChangeLastMessage(PersonalMessageModel? value) {
-    if (value?.type == MessageType.photoType) {
-      if (value?.senderId == AppUrl.senderId) {
-        return "You sent a photo";
-      } else {
-        return "Send a photo";
-      }
-    } else if (value?.type == MessageType.textType) {
-      return _lastMessage = value?.message;
-    } else if (value?.type == MessageType.voiceType) {
-      return "Voice message";
-    } else {
-      return "N/A";
-    }
+    final messages = {
+      MessageType.photoType: (value?.senderId == AppUrl.senderId)
+          ? "You sent a photo"
+          : "Send a photo",
+      MessageType.textType: value?.message,
+      MessageType.voiceType: "Voice message",
+      MessageType.invoiceType: "Invoice",
+      MessageType.buyListingType: "Buy listing",
+    };
+    return messages[value?.type] ?? "N/A";
   }
 
   void onDispose() {

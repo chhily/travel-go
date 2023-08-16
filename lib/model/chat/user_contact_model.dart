@@ -1,18 +1,19 @@
 import 'package:travel_go/model/message/personal_message.dart';
 import 'package:travel_go/model/pagination.dart';
 import 'package:travel_go/model/receiver_model.dart';
+import 'package:travel_go/model/receiver_store.dart';
 
-class ContactListModel {
+class UsersContactListModel {
   List<UserContactModel> userContactModel;
   Pagination? pagination;
 
-  ContactListModel({
+  UsersContactListModel({
     required this.userContactModel,
     required this.pagination,
   });
 
-  factory ContactListModel.fromJson(Map<String, dynamic> json) =>
-      ContactListModel(
+  factory UsersContactListModel.fromJson(Map<String, dynamic> json) =>
+      UsersContactListModel(
         userContactModel: json["data"] == null
             ? []
             : List<UserContactModel>.from(
@@ -28,7 +29,7 @@ class UserContactModel {
     this.id,
     this.receiver,
     this.dataId,
-    this.unreadMessagesCount,
+    this.unreadMessagesCount = 0,
     this.lastMessage,
     this.shop,
   });
@@ -38,7 +39,7 @@ class UserContactModel {
   final String? id;
   int? unreadMessagesCount;
   final PersonalMessageModel? lastMessage;
-  final dynamic shop;
+  final List<ReceiverStoreModel>? shop;
 
   factory UserContactModel.fromJson(Map<String, dynamic> json) =>
       UserContactModel(
@@ -52,5 +53,10 @@ class UserContactModel {
         lastMessage: json["last_message"] == null
             ? null
             : PersonalMessageModel.fromJson(json["last_message"]),
+        // shop: json["shop"] != null
+        //     ? List<ReceiverStoreModel>.from(json["shop"].map((x) => x != null
+        //         ? ReceiverStoreModel.fromJson(x)
+        //         : ReceiverStoreModel()))
+        //     : [],
       );
 }

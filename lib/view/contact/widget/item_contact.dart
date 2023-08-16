@@ -1,32 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:travel_go/constant/app_color.dart';
 import 'package:travel_go/constant/app_size.dart';
 import 'package:travel_go/constant/app_spacing.dart';
 import 'package:travel_go/constant/app_url.dart';
-import 'package:travel_go/model/message/personal_message.dart';
 import 'package:travel_go/model/receiver_model.dart';
-import 'package:travel_go/provider/message/contact_handler.dart';
+import 'package:travel_go/model/receiver_store.dart';
 import 'package:travel_go/util/app_helper.dart';
-import 'package:travel_go/util/extention.dart';
+import 'package:travel_go/util/extension.dart';
 import 'package:travel_go/util/ui_helper.dart';
-import 'package:travel_go/view/root.dart';
 
 class ItemContactWidget extends StatelessWidget {
   final ReceiverModel? receiverInfo;
+  final ReceiverStoreModel? storeReceiverInfo;
   final DateTime? timeAgo;
   final num? unReadCount;
   final String? lastMessage;
-  final PersonalMessageModel? personalMessageModel;
   final void Function()? onTap;
   const ItemContactWidget(
       {super.key,
-      required this.receiverInfo,
+      this.receiverInfo,
       this.timeAgo,
       this.unReadCount,
       this.onTap,
       this.lastMessage,
-      this.personalMessageModel});
+      this.storeReceiverInfo});
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +37,7 @@ class ItemContactWidget extends StatelessWidget {
           child: Row(
             children: [
               UIHelper.imageAvatarHelper(
-                  "${receiverInfo?.photoUrl}?token=${AppUrl.senderToken}",
+                  "${storeReceiverInfo?.photoUrl ?? receiverInfo?.photoUrl}?token=${AppUrl.senderToken}",
                   size: 44),
               HorizontalSpacing.medium,
               Column(
@@ -51,7 +48,9 @@ class ItemContactWidget extends StatelessWidget {
                     child: Row(
                       children: [
                         UIHelper.textHelper(
-                            text: receiverInfo?.fullName ?? "N/A",
+                            text: storeReceiverInfo?.name ??
+                                receiverInfo?.fullName ??
+                                "N/A",
                             fontWeight: FontWeight.bold),
                         const VerticalDivider(
                             color: AppColors.primary, thickness: 0.5),
@@ -63,33 +62,16 @@ class ItemContactWidget extends StatelessWidget {
                   ),
                   VerticalSpacing.small,
                   SizedBox(
-                      width: TravelGoExtension(context).mediaQuery.size.width * 0.5,
+                      width:
+                          TravelGoExtension(context).mediaQuerySize.width * 0.6,
                       child: UIHelper.textHelper(
                           text: lastMessage ?? "N/A", maxLines: 1)),
                 ],
               ),
               const Spacer(),
-              Consumer<ContactHandler>(
-                builder: (context, valueListener, child) {
-                  if (valueListener.unReadCount == 0) {
-                    if (unReadCount == 0 || unReadCount == null) {
-                      return const SizedBox.shrink();
-                    } else {
-                      return Container(
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                            color: AppColors.primary,
-                            borderRadius: AppRadius.regular),
-                        height: 20,
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        child: UIHelper.textHelper(
-                            textAlign: TextAlign.center,
-                            text: AppHelper.formatNumber(number: unReadCount),
-                            textColor: AppColors.white),
-                      );
-                    }
-                  } else {
-                    return Container(
+              unReadCount == 0 || unReadCount == null
+                  ? const SizedBox.shrink()
+                  : Container(
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
                           color: AppColors.primary,
@@ -100,10 +82,7 @@ class ItemContactWidget extends StatelessWidget {
                           textAlign: TextAlign.center,
                           text: AppHelper.formatNumber(number: unReadCount),
                           textColor: AppColors.white),
-                    );
-                  }
-                },
-              )
+                    )
             ],
           ),
         ),

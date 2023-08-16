@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:travel_go/constant/app_theme.dart';
 import 'package:travel_go/provider/message/contact_handler.dart';
 import 'package:travel_go/provider/message/message_handler.dart';
+import 'package:travel_go/provider/message/user_store_handler.dart';
+import 'package:travel_go/util/extension.dart';
 import 'package:travel_go/view/root.dart';
 
 void main() {
@@ -19,14 +21,15 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => MessageHandler()),
-        ChangeNotifierProvider(create: (_) => ContactHandler())
+        ChangeNotifierProvider(create: (_) => UserContactHandler()),
+        ChangeNotifierProvider(create: (_) => UserToStoreHandler())
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.theme(textTheme),
         home: GestureDetector(
-            onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+            onTap: () => TravelGoExtension(context).hideKeyboard(),
             child: const TravelGoRoot()),
       ),
     );

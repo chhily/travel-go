@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:travel_go/constant/app_color.dart';
 import 'package:travel_go/model/receiver_model.dart';
+import 'package:travel_go/model/receiver_store.dart';
 import 'package:travel_go/provider/message/message_handler.dart';
 import 'package:travel_go/socket/socket_service.dart';
-import 'package:travel_go/util/extention.dart';
+import 'package:travel_go/util/extension.dart';
 import 'package:travel_go/view/message/message_list.dart';
 import 'package:travel_go/view/message/utility/sender_action.dart';
 import 'package:travel_go/view/message/widget/message_appbar.dart';
@@ -13,8 +14,12 @@ import 'package:travel_go/widget/loading_helper.dart';
 class MessagePage extends StatefulWidget {
   final String chatId;
   final String receiverId;
+  final bool isUserStore;
   const MessagePage(
-      {super.key, required this.chatId, required this.receiverId});
+      {super.key,
+      required this.chatId,
+      required this.receiverId,
+      required this.isUserStore});
 
   @override
   State<MessagePage> createState() => _MessagePageState();
@@ -33,9 +38,15 @@ class _MessagePageState extends State<MessagePage> {
     messageHandler.onInitTextController();
   }
 
-  Future<ReceiverModel?> onInitData() async {
+  Future<ReceiverModel?> onGetUserReceiver() async {
     final data =
         await messageHandler.onGetReceiverInfo(receiverId: widget.receiverId);
+    return data;
+  }
+
+  Future<ReceiverStoreModel?> onGetStoreReceiver() async {
+    final data = await messageHandler.onGetStoreReceiverInfo(
+        receiverId: widget.receiverId);
     return data;
   }
 
@@ -59,8 +70,8 @@ class _MessagePageState extends State<MessagePage> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<ReceiverModel?>(
-      future: onInitData(),
+    return FutureBuilder(
+      future: widget.isUserStore ? onGetStoreReceiver() : onGetUserReceiver(),
       builder: (context, snapshot) {
         if (snapshot.data == null) {
           return const LoadingHelper();
@@ -73,9 +84,9 @@ class _MessagePageState extends State<MessagePage> {
             child: Scaffold(
                 backgroundColor: AppColors.white,
                 appBar: MessageAppBar(
-                    imgUrl: messageHandler.receiverInfo?.photoUrl ?? "",
-                    username:
-                        " ${messageHandler.receiverInfo?.lastName} ${messageHandler.receiverInfo?.firstName}"),
+                  receiverStoreInfo: messageHandler.receiverStoreInfo,
+                  receiverUserInfo: messageHandler.receiverInfo,
+                ),
                 body: Column(
                   children: [
                     Expanded(child: MessageListWidget(

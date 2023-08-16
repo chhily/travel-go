@@ -63,7 +63,8 @@ class SenderActionWidget extends StatelessWidget {
                             SendMessageType.imageMessage) {
                           provider
                               .onSendImageMessage(
-                                  chatId: "", photoBase64: provider.imageValue)
+                                  chatId: chatId,
+                                  photoBase64: provider.imageValue)
                               .then((value) {
                             if (provider.textMessageCT.text.isNotEmpty) {
                               provider.onSendTextMessage(chatId: chatId);
