@@ -32,7 +32,7 @@ class UserToStoreHandler with ChangeNotifier {
     notifyListeners();
   }
 
-  String? onChangeLastMessage(StorePersonalMessageModel? value) {
+  String? onChangeLastMessage(PersonalMessageModel? value) {
     final messages = {
       MessageType.photoType: "You sent a photo",
       MessageType.textType: value?.message?.trim(),

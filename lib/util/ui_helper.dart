@@ -17,6 +17,7 @@ class UIHelper {
     double? fontSize,
     Color? textColor,
     int? maxLines,
+    TextDecoration? decoration,
   }) {
     return Text(
       text,
@@ -26,6 +27,8 @@ class UIHelper {
           fontWeight: fontWeight ?? FontWeight.normal,
           fontSize: fontSize ?? FontSize.fontSizeRegular,
           color: textColor ?? AppColors.primary,
+          decoration: decoration,
+          decorationThickness: 2,
           overflow: TextOverflow.ellipsis),
     );
   }

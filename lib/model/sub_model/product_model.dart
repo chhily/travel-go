@@ -2,26 +2,23 @@ class ProductModel {
   List<String>? photoUrls;
   String? id;
   String? title;
+  DateTime? deletedAt;
 
   ProductModel({
     this.photoUrls,
     this.id,
     this.title,
+    this.deletedAt,
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
         photoUrls: json["photo_urls"] == null
             ? []
-            : List<String>.from(json["photo_urls"]!.map((x) => x != null)),
+            : List<String>.from(json["photo_urls"]!.map((x) => x)),
         id: json["_id"],
         title: json["title"],
+        deletedAt: json["deleted_at"] == null
+            ? null
+            : DateTime.parse(json["deleted_at"]),
       );
-
-  Map<String, dynamic> toJson() => {
-        "photo_urls": photoUrls == null
-            ? []
-            : List<dynamic>.from(photoUrls!.map((x) => x)),
-        "_id": id,
-        "title": title,
-      };
 }

@@ -9,6 +9,7 @@ class ProductItemModel {
   num? pricePerUnit;
   num? amount;
   UnitModel? unit;
+  String? productItemId;
 
   ProductItemModel({
     this.id,
@@ -17,6 +18,7 @@ class ProductItemModel {
     this.pricePerUnit,
     this.amount,
     this.unit,
+    this.productItemId
   });
 
   factory ProductItemModel.fromJson(Map<String, dynamic> json) => ProductItemModel(
@@ -27,14 +29,7 @@ class ProductItemModel {
     pricePerUnit: json["price_per_unit"],
     amount: json["amount"],
     unit: json["unit"] == null ? null : UnitModel.fromJson(json["unit"]),
+    productItemId: json["id"],
   );
 
-  Map<String, dynamic> toJson() => {
-    "_id": id,
-    "product": product?.toJson(),
-    "quantity": quantity,
-    "price_per_unit": pricePerUnit,
-    "amount": amount,
-    "unit": unit?.toJson(),
-  };
 }

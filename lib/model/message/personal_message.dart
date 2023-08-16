@@ -1,3 +1,5 @@
+import 'package:travel_go/model/sub_model/invoice_model.dart';
+
 import '../pagination.dart';
 
 class PersonalMessageListModel {
@@ -33,7 +35,9 @@ class PersonalMessageModel {
       this.createdAt,
       this.updatedAt,
       this.type,
-      this.duration});
+      this.duration,
+      this.payment,
+      this.invoice});
 
   final String? id;
   final List<PersonalMessageModel>? histories;
@@ -48,6 +52,8 @@ class PersonalMessageModel {
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final String? type;
+  InvoiceModel? invoice;
+  InvoiceModel? payment;
   final dynamic duration;
   factory PersonalMessageModel.fromJson(Map<String, dynamic> json) {
     return PersonalMessageModel(
@@ -72,6 +78,12 @@ class PersonalMessageModel {
       updatedAt: json["updated_at"] == null
           ? null
           : DateTime.parse(json["updated_at"]),
+      invoice: json["invoice"] == null
+          ? null
+          : InvoiceModel.fromJson(json["invoice"]),
+      payment: json["payment"] == null
+          ? null
+          : InvoiceModel.fromJson(json["payment"]),
     );
   }
 }

@@ -1,4 +1,4 @@
-import 'package:travel_go/model/chat/store_personal_message.dart';
+import 'package:travel_go/model/message/personal_message.dart';
 import 'package:travel_go/model/pagination.dart';
 import 'package:travel_go/model/receiver_model.dart';
 import 'package:travel_go/model/receiver_store.dart';
@@ -31,9 +31,9 @@ class StoreUserContactModel {
   DateTime? createdAt;
   DateTime? updatedAt;
   int? v;
-  String? datumId;
+  String? dataId;
   int? unreadMessagesCount;
-  StorePersonalMessageModel? lastMessage;
+  PersonalMessageModel? lastMessage;
 
   StoreUserContactModel({
     this.receiver,
@@ -42,7 +42,7 @@ class StoreUserContactModel {
     this.createdAt,
     this.updatedAt,
     this.v,
-    this.datumId,
+    this.dataId,
     this.unreadMessagesCount,
     this.lastMessage,
   });
@@ -64,11 +64,11 @@ class StoreUserContactModel {
             ? null
             : DateTime.parse(json["updated_at"]),
         v: json["__v"],
-        datumId: json["id"],
+        dataId: json["id"],
         unreadMessagesCount: json["unread_messages_count"],
         lastMessage: json["last_message"] == null
             ? null
-            : StorePersonalMessageModel.fromJson(json["last_message"]),
+            : PersonalMessageModel.fromJson(json["last_message"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -76,8 +76,7 @@ class StoreUserContactModel {
         "created_at": createdAt?.toIso8601String(),
         "updated_at": updatedAt?.toIso8601String(),
         "__v": v,
-        "id": datumId,
+        "id": dataId,
         "unread_messages_count": unreadMessagesCount,
-        "last_message": lastMessage?.toJson(),
       };
 }

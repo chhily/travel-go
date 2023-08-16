@@ -6,11 +6,15 @@ import 'package:travel_go/model/message/personal_message.dart';
 import 'package:travel_go/provider/message/message_handler.dart';
 import 'package:travel_go/view/message/utility/widget/bottom_sheet.dart';
 import 'package:travel_go/view/message/widget/receiver/receiver_image.dart';
+import 'package:travel_go/view/message/widget/receiver/receiver_invoice.dart';
 import 'package:travel_go/view/message/widget/receiver/receiver_message.dart';
 import 'package:travel_go/view/message/widget/sender/sender_image.dart';
+import 'package:travel_go/view/message/widget/sender/sender_invoice.dart';
 import 'package:travel_go/view/message/widget/sender/sender_message.dart';
+import 'package:travel_go/view/message/widget/sender/sender_payment.dart';
 
 import '../audio/audio_widget.dart';
+import 'receiver/receiver_payment.dart';
 
 class ValidatedMessageTypeWidget extends StatelessWidget {
   final PersonalMessageModel? personalMessageModel;
@@ -30,14 +34,14 @@ class ValidatedMessageTypeWidget extends StatelessWidget {
     if (personalMessageModel?.type == MessageType.textType) {
       return GestureDetector(
           onLongPress: () {
-            final _provider =
+            final provider =
                 Provider.of<MessageHandler>(context, listen: false);
             showModalBottomSheet<void>(
               context: context,
               builder: (context) {
                 return ActionSheet(
                   onPressedEdit: () {
-                    _provider.onGetMessageId(
+                    provider.onGetMessageId(
                         textMessage: personalMessageModel?.message,
                         messageId: personalMessageModel?.id,
                         isEdit: true);
@@ -57,6 +61,10 @@ class ValidatedMessageTypeWidget extends StatelessWidget {
             "${personalMessageModel?.voiceUrl}?token=${AppUrl.senderToken}",
         isReceiverAudio: false,
       );
+    } else if (personalMessageModel?.type == MessageType.invoiceType) {
+      return const SenderInvoiceWidget();
+    } else if (personalMessageModel?.type == MessageType.paymentType) {
+      return SenderPaymentWidget(personalMessageModel: personalMessageModel);
     } else {
       return const Placeholder(
         fallbackHeight: 100,
@@ -78,6 +86,11 @@ class ValidatedMessageTypeWidget extends StatelessWidget {
             "${personalMessageModel?.voiceUrl}?token=${AppUrl.senderToken}",
         isReceiverAudio: true,
       );
+    } else if (personalMessageModel?.type == MessageType.invoiceType) {
+      // return SizedBox();
+      return ReceiverInvoiceWidget(personalMessageModel: personalMessageModel);
+    } else if (personalMessageModel?.type == MessageType.paymentType) {
+      return ReceiverPaymentWidget(personalMessageModel: personalMessageModel);
     } else {
       return const Placeholder(
         fallbackHeight: 100,
