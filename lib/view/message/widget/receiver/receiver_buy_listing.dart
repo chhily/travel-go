@@ -3,7 +3,7 @@ import 'package:travel_go/constant/app_color.dart';
 import 'package:travel_go/constant/app_spacing.dart';
 import 'package:travel_go/constant/app_url.dart';
 import 'package:travel_go/model/sub_model/buy_listing.dart';
-import 'package:travel_go/util/extension.dart';
+import 'package:travel_go/base/extension.dart';
 import 'package:travel_go/util/ui_helper.dart';
 
 class ReceiverBuyListingWidget extends StatelessWidget {

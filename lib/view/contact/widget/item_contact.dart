@@ -6,7 +6,7 @@ import 'package:travel_go/constant/app_url.dart';
 import 'package:travel_go/model/receiver_model.dart';
 import 'package:travel_go/model/receiver_store.dart';
 import 'package:travel_go/util/app_helper.dart';
-import 'package:travel_go/util/extension.dart';
+import 'package:travel_go/base/extension.dart';
 import 'package:travel_go/util/ui_helper.dart';
 
 class ItemContactWidget extends StatelessWidget {

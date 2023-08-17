@@ -4,7 +4,7 @@ import 'package:travel_go/constant/app_size.dart';
 import 'package:travel_go/constant/app_spacing.dart';
 import 'package:travel_go/constant/app_url.dart';
 import 'package:travel_go/model/sub_model/buy_listing.dart';
-import 'package:travel_go/util/extension.dart';
+import 'package:travel_go/base/extension.dart';
 import 'package:travel_go/util/ui_helper.dart';
 
 class SenderBuyListingWidget extends StatelessWidget {

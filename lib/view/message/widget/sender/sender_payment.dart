@@ -3,7 +3,7 @@ import 'package:travel_go/constant/app_color.dart';
 import 'package:travel_go/constant/app_size.dart';
 import 'package:travel_go/constant/app_spacing.dart';
 import 'package:travel_go/model/message/personal_message.dart';
-import 'package:travel_go/util/extension.dart';
+import 'package:travel_go/base/extension.dart';
 import 'package:travel_go/util/ui_helper.dart';
 import 'package:travel_go/view/message/widget/item_invoice_payment.dart';
 

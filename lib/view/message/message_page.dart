@@ -5,7 +5,7 @@ import 'package:travel_go/model/receiver_model.dart';
 import 'package:travel_go/model/receiver_store.dart';
 import 'package:travel_go/provider/message/message_handler.dart';
 import 'package:travel_go/socket/socket_service.dart';
-import 'package:travel_go/util/extension.dart';
+import 'package:travel_go/base/extension.dart';
 import 'package:travel_go/view/message/message_list.dart';
 import 'package:travel_go/view/message/utility/sender_action.dart';
 import 'package:travel_go/view/message/widget/message_appbar.dart';

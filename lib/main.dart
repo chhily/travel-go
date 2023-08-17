@@ -4,7 +4,7 @@ import 'package:travel_go/constant/app_theme.dart';
 import 'package:travel_go/provider/message/contact_handler.dart';
 import 'package:travel_go/provider/message/message_handler.dart';
 import 'package:travel_go/provider/message/user_store_handler.dart';
-import 'package:travel_go/util/extension.dart';
+import 'package:travel_go/base/extension.dart';
 import 'package:travel_go/view/root.dart';
 
 void main() {

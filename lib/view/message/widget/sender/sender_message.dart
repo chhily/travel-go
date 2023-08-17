@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:travel_go/constant/app_color.dart';
 import 'package:travel_go/util/ui_helper.dart';
-import 'package:travel_go/util/extension.dart';
+import 'package:travel_go/base/extension.dart';
 
 class SenderMessageWidget extends StatelessWidget {
   final String message;

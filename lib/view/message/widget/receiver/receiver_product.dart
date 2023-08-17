@@ -4,7 +4,7 @@ import 'package:travel_go/constant/app_size.dart';
 import 'package:travel_go/constant/app_spacing.dart';
 import 'package:travel_go/constant/app_url.dart';
 import 'package:travel_go/model/sub_model/product_model.dart';
-import 'package:travel_go/util/extension.dart';
+import 'package:travel_go/base/extension.dart';
 import 'package:travel_go/util/ui_helper.dart';
 
 class ReceiverProductWidget extends StatelessWidget {
