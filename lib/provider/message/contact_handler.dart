@@ -126,7 +126,6 @@ class UserContactHandler with ChangeNotifier {
 
   Future<void> onRemoveCurrentLiveContact(int index) async {
     /**
-     * ! it is because i use 2 dif list
      * ! to handle diff case so i need
      * ! to remove it too
      * */

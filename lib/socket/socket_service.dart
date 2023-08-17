@@ -180,13 +180,18 @@ class SocketService {
           (userStoresList) {
             if (userStoresList != null) {
               userToStoreHandler.onGetUserStoreContactList(userStoresList);
+              userToStoreHandler
+                  .onGetContactPagination(userStoresList.pagination);
             }
           },
         );
       }
       if (jsonValue[ResponseField.actionField] == ResponseField.actionNew) {
-        debugPrint(
-            "User to Stores action new ${jsonValue[ResponseField.dataField]}");
+        await onReceiveUserStoresLiveContact(jsonValue)
+            .then((liveUserStoresContact) {
+          userToStoreHandler
+              .onUpdateLiveStoresContactValue(liveUserStoresContact);
+        });
       }
     });
   }
@@ -206,17 +211,19 @@ class SocketService {
   }
 
   //
-  // Future<UserContactModel?> onReceiveLiveContact(dynamic jsonValue) async {
-  //   if (jsonValue[ResponseField.actionField] == ResponseField.actionNew) {
-  //     try {
-  //       final inComingMessage =
-  //           PersonalMessageModel.fromJson(jsonValue[ResponseField.dataField]);
-  //     } catch (e) {
-  //       debugPrint("Couldn't receive live contact $e");
-  //     }
-  //   }
-  //   return null;
-  // }
+  Future<PersonalMessageModel?> onReceiveUserStoresLiveContact(
+      dynamic jsonValue) async {
+    if (jsonValue[ResponseField.actionField] == ResponseField.actionNew) {
+      try {
+        final liveUserStores =
+            PersonalMessageModel.fromJson(jsonValue[ResponseField.dataField]);
+        return liveUserStores;
+      } catch (e) {
+        debugPrint("Couldn't receive live contact $e");
+      }
+    }
+    return null;
+  }
 
   // send edited message
 

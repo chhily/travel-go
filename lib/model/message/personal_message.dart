@@ -1,4 +1,6 @@
+import 'package:travel_go/model/sub_model/buy_listing.dart';
 import 'package:travel_go/model/sub_model/invoice_model.dart';
+import 'package:travel_go/model/sub_model/product_model.dart';
 
 import '../pagination.dart';
 
@@ -21,23 +23,26 @@ class PersonalMessageListModel {
 }
 
 class PersonalMessageModel {
-  PersonalMessageModel(
-      {this.id,
-      this.histories,
-      this.message,
-      this.photo,
-      this.photoUrl,
-      this.voice,
-      this.voiceUrl,
-      this.chatId,
-      this.senderId,
-      this.seen,
-      this.createdAt,
-      this.updatedAt,
-      this.type,
-      this.duration,
-      this.payment,
-      this.invoice});
+  PersonalMessageModel({
+    this.id,
+    this.histories,
+    this.message,
+    this.photo,
+    this.photoUrl,
+    this.voice,
+    this.voiceUrl,
+    this.chatId,
+    this.senderId,
+    this.seen,
+    this.createdAt,
+    this.updatedAt,
+    this.type,
+    this.duration,
+    this.payment,
+    this.buyListing,
+    this.invoice,
+    this.product,
+  });
 
   final String? id;
   final List<PersonalMessageModel>? histories;
@@ -54,6 +59,8 @@ class PersonalMessageModel {
   final String? type;
   InvoiceModel? invoice;
   InvoiceModel? payment;
+  BuyListingModel? buyListing;
+  ProductModel? product;
   final dynamic duration;
   factory PersonalMessageModel.fromJson(Map<String, dynamic> json) {
     return PersonalMessageModel(
@@ -84,6 +91,12 @@ class PersonalMessageModel {
       payment: json["payment"] == null
           ? null
           : InvoiceModel.fromJson(json["payment"]),
+      buyListing: json["buy_listing"] == null
+          ? null
+          : BuyListingModel.fromJson(json["buy_listing"]),
+      product: json["product"] == null
+          ? null
+          : ProductModel.fromJson(json["product"]),
     );
   }
 }

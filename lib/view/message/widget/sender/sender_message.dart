@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:travel_go/constant/app_color.dart';
 import 'package:travel_go/util/ui_helper.dart';
+import 'package:travel_go/util/extension.dart';
 
 class SenderMessageWidget extends StatelessWidget {
   final String message;
@@ -15,12 +16,8 @@ class SenderMessageWidget extends StatelessWidget {
           maxWidth: MediaQuery.of(context).size.width * 0.7,
           maxHeight: MediaQuery.of(context).size.height * 0.35,
         ),
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(12),
-            topLeft: Radius.circular(12),
-            topRight: Radius.circular(12),
-          ),
+        decoration: BoxDecoration(
+          borderRadius: MessageExtension(true).messageRadius,
           color: AppColors.primary,
         ),
         padding: const EdgeInsets.all(8),

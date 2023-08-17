@@ -19,9 +19,10 @@ class MessageListWidget extends StatelessWidget {
         final messageValue = valueNotifier.personalMessageList;
         return PaginationWidgetHandler(
           isReverse: true,
-          receiverImgUrl: valueNotifier.receiverInfo?.photoUrl,
+          receiverImgUrl: valueNotifier.receiverInfo?.photoUrl ??
+              valueNotifier.receiverStoreInfo?.photoUrl,
           receiverUsername:
-              "${valueNotifier.receiverInfo?.lastName} ${valueNotifier.receiverInfo?.firstName}",
+              "${valueNotifier.receiverInfo?.fullName ?? valueNotifier.receiverStoreInfo?.name}",
           dataLoader: dataLoader,
           hasMoreData: valueNotifier.personalMessage?.pagination != null
               ? messageValue.length <

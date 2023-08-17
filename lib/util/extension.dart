@@ -9,14 +9,14 @@ extension MessageExtension on bool {
   BorderRadius get messageRadius {
     if (this) {
       return const BorderRadius.only(
-          topRight: Radius.circular(10),
-          topLeft: Radius.circular(10),
-          bottomLeft: Radius.circular(10));
+          topRight: Radius.circular(12),
+          topLeft: Radius.circular(12),
+          bottomLeft: Radius.circular(12));
     } else {
       return const BorderRadius.only(
-          topRight: Radius.circular(10),
-          topLeft: Radius.circular(10),
-          bottomRight: Radius.circular(10));
+          topRight: Radius.circular(12),
+          topLeft: Radius.circular(12),
+          bottomRight: Radius.circular(12));
     }
   }
 }

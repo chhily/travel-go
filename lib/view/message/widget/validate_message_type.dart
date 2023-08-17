@@ -5,13 +5,17 @@ import 'package:travel_go/constant/message_type.dart';
 import 'package:travel_go/model/message/personal_message.dart';
 import 'package:travel_go/provider/message/message_handler.dart';
 import 'package:travel_go/view/message/utility/widget/bottom_sheet.dart';
+import 'package:travel_go/view/message/widget/receiver/receiver_buy_listing.dart';
 import 'package:travel_go/view/message/widget/receiver/receiver_image.dart';
 import 'package:travel_go/view/message/widget/receiver/receiver_invoice.dart';
 import 'package:travel_go/view/message/widget/receiver/receiver_message.dart';
+import 'package:travel_go/view/message/widget/receiver/receiver_product.dart';
+import 'package:travel_go/view/message/widget/sender/sender_buy_listing.dart';
 import 'package:travel_go/view/message/widget/sender/sender_image.dart';
 import 'package:travel_go/view/message/widget/sender/sender_invoice.dart';
 import 'package:travel_go/view/message/widget/sender/sender_message.dart';
 import 'package:travel_go/view/message/widget/sender/sender_payment.dart';
+import 'package:travel_go/view/message/widget/sender/sender_product.dart';
 
 import '../audio/audio_widget.dart';
 import 'receiver/receiver_payment.dart';
@@ -65,6 +69,13 @@ class ValidatedMessageTypeWidget extends StatelessWidget {
       return const SenderInvoiceWidget();
     } else if (personalMessageModel?.type == MessageType.paymentType) {
       return SenderPaymentWidget(personalMessageModel: personalMessageModel);
+    } else if (personalMessageModel?.type == MessageType.productType) {
+      return SenderProductWidget(
+        productModel: personalMessageModel?.product,
+      );
+    } else if (personalMessageModel?.type == MessageType.buyListingType) {
+      return SenderBuyListingWidget(
+          buyListingModel: personalMessageModel?.buyListing);
     } else {
       return const Placeholder(
         fallbackHeight: 100,
@@ -91,6 +102,11 @@ class ValidatedMessageTypeWidget extends StatelessWidget {
       return ReceiverInvoiceWidget(personalMessageModel: personalMessageModel);
     } else if (personalMessageModel?.type == MessageType.paymentType) {
       return ReceiverPaymentWidget(personalMessageModel: personalMessageModel);
+    } else if (personalMessageModel?.type == MessageType.productType) {
+      return const ReceiverProductWidget();
+    } else if (personalMessageModel?.type == MessageType.buyListingType) {
+      return ReceiverBuyListingWidget(
+          buyListingModel: personalMessageModel?.buyListing);
     } else {
       return const Placeholder(
         fallbackHeight: 100,

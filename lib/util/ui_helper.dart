@@ -163,7 +163,7 @@ class UIHelper {
           decoration: BoxDecoration(
               color: AppColors.contentColor.withOpacity(0.5),
               borderRadius: borderRadius ?? AppRadius.regular),
-          child: const Icon(Icons.error, size: 40)),
+          child: const Icon(Icons.image_rounded, size: 40)),
     );
   }
 
