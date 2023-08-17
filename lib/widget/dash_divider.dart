@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../constant/app_color.dart';
-import '../constant/app_spacing.dart';
 
 class DashDivider extends StatelessWidget {
   const DashDivider(

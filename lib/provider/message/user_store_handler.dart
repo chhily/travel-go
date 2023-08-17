@@ -6,7 +6,6 @@ import 'package:travel_go/model/chat/store_contact_model.dart';
 import 'package:travel_go/model/message/personal_message.dart';
 import 'package:travel_go/model/pagination.dart';
 import 'package:travel_go/model/receiver_model.dart';
-import 'package:travel_go/socket/socket_service.dart';
 
 class UserToStoreHandler with ChangeNotifier {
   final List<StoreUserContactModel> _userStoreContactList = [];

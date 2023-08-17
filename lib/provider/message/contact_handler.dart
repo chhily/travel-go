@@ -174,7 +174,7 @@ class UserContactHandler with ChangeNotifier {
           //   print(element.id);
           // }
           _userContactList.firstWhereOrNull((eachValue) {
-            print("id of eachValue ${eachValue.id}");
+            debugPrint("id of eachValue ${eachValue.id}");
 
             /**
              * ! This when has new user contact you

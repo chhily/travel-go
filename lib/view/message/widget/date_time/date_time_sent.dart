@@ -35,11 +35,7 @@ class DateTimeSentWidget extends StatelessWidget {
             );
           } else {
             return _buildSeenAgo();
-            return Center(
-              child: UIHelper.textHelper(
-                  text: AppHelper.timeFormatter(timeAgo: sentAgo),
-                  fontSize: FontSize.fontSizeBig),
-            );
+
           }
         });
   }

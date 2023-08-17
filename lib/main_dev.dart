@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:travel_go/base/exception_handler.dart';
 import 'package:travel_go/config/flavor.dart';
-import 'package:travel_go/provider/geo/geo_handler.dart';
 
 import 'main.dart';
 

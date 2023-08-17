@@ -48,6 +48,5 @@ class UserActionButton extends StatelessWidget {
         ),
       ],
     );
-    return const Placeholder();
   }
 }

@@ -4,7 +4,6 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:travel_go/constant/message_type.dart';
-import 'package:travel_go/model/chat/user_contact_model.dart';
 import 'package:travel_go/model/message/personal_message.dart';
 import 'package:travel_go/model/receiver_model.dart';
 import 'package:travel_go/model/pagination.dart';

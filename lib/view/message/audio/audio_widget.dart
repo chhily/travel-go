@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:travel_go/util/ui_helper.dart';
@@ -33,11 +32,6 @@ class _AudioPlayerMessageState extends State<AudioPlayerMessage>
   onInit() {
     futureDuration = _audioPlayer
         .setAudioSource(AudioSource.uri(Uri.parse(widget.audioSource)));
-    void playerStateListener(PlayerState state) async {
-      if (state.processingState == ProcessingState.completed) {
-        await reset();
-      }
-    }
   }
 
   @override

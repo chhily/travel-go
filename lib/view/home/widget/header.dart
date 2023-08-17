@@ -3,10 +3,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:travel_go/constant/app_color.dart';
 import 'package:travel_go/constant/app_size.dart';
 import 'package:travel_go/constant/app_spacing.dart';
-import 'package:travel_go/constant/app_url.dart';
 import 'package:travel_go/util/ui_helper.dart';
 import 'package:travel_go/view/contact/user_chat.dart';
-import 'package:travel_go/view/message/message_page.dart';
 
 import '../../contact/user/contact_page.dart';
 
