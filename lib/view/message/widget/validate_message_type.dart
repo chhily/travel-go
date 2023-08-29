@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:travel_go/base/extension.dart';
 import 'package:travel_go/constant/app_url.dart';
 import 'package:travel_go/constant/message_type.dart';
 import 'package:travel_go/model/message/personal_message.dart';
@@ -20,6 +22,8 @@ import 'package:travel_go/view/message/widget/sender/sender_product.dart';
 import '../audio/audio_widget.dart';
 import 'receiver/receiver_payment.dart';
 
+// import 'package:flutter/services.dart';
+
 class ValidatedMessageTypeWidget extends StatelessWidget {
   final PersonalMessageModel? personalMessageModel;
   const ValidatedMessageTypeWidget(
@@ -38,22 +42,32 @@ class ValidatedMessageTypeWidget extends StatelessWidget {
     if (personalMessageModel?.type == MessageType.textType) {
       return GestureDetector(
           onLongPress: () {
-            final provider =
-                Provider.of<MessageHandler>(context, listen: false);
-            showModalBottomSheet<void>(
-              context: context,
-              builder: (context) {
-                return ActionSheet(
-                  onPressedEdit: () {
-                    provider.onGetMessageId(
-                        textMessage: personalMessageModel?.message,
-                        messageId: personalMessageModel?.id,
-                        isEdit: true);
-                    Navigator.pop(context);
-                  },
-                );
-              },
-            );
+            TravelGoExtension(context).hideKeyboard();
+            HapticFeedback.vibrate().then((value) {
+              final provider =
+                  Provider.of<MessageProvider>(context, listen: false);
+              showModalBottomSheet<void>(
+                context: context,
+                builder: (context) {
+                  return ActionSheet(
+                    onPressedEdit: () {
+                      provider.onGetMessageId(
+                          textMessage: personalMessageModel?.message,
+                          messageId: personalMessageModel?.id,
+                          isEdit: true);
+                      Navigator.pop(context);
+                    },
+                    onPressDelete: () {
+                      provider
+                          .onDeleteMessage(
+                              messageId: personalMessageModel?.id,
+                              chatId: personalMessageModel?.chatId)
+                          .then((value) => Navigator.maybePop(context));
+                    },
+                  );
+                },
+              );
+            });
           },
           child: SenderMessageWidget(
               message: personalMessageModel?.message ?? ""));

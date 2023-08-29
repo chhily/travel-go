@@ -243,6 +243,7 @@ class UserContactHandler with ChangeNotifier {
     _receiverModel = null;
     _contactPagination = null;
     _lastMessage = null;
+    _contactListModel = null;
     // _liveContactList.clear();
   }
 }

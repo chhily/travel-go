@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:travel_go/provider/message/contact_handler.dart';
 import 'package:travel_go/provider/message/user_store_handler.dart';
 import 'package:travel_go/socket/socket_service.dart';
+import 'package:travel_go/util/deboucer.dart';
 import 'package:travel_go/view/contact/user/contact_page.dart';
 import 'package:travel_go/view/contact/user/user_store_contact.dart';
 import 'package:travel_go/view/contact/widget/tab_widget.dart';
@@ -84,33 +85,38 @@ class _UserChatPageState extends State<UserChatPage>
             UserContactPage(
               dataLoader: () async {
                 debugPrint("on fetch more data");
-                if (contactHandler.userContactList.length >= 10) {
-                  debugPrint("length is greater than 10");
-                  pageKey += 1;
-                  contactHandler.userContactList.isNotEmpty &&
-                      pageKey <=
-                          (contactHandler.contactListModel!.pagination!.total /
-                                  10)
-                              .ceil();
-                  await socketService.onEmitUserContactList(pageKey: pageKey);
-                }
+                DeBouncer(milliseconds: 500).run(() async {
+                  if (contactHandler.userContactList.length >= 10) {
+                    debugPrint("length is greater than 10");
+                    pageKey += 1;
+                    contactHandler.userContactList.isNotEmpty &&
+                        pageKey <=
+                            (contactHandler
+                                        .contactListModel!.pagination!.total /
+                                    10)
+                                .ceil();
+                    await socketService.onEmitUserContactList(pageKey: pageKey);
+                  }
+                });
               },
             ),
             UserStorePage(
               dataLoader: () async {
+                DeBouncer(milliseconds: 500).run(() async {
+                  if (userToStoreHandler.userStoreContactList.length >= 10) {
+                    debugPrint("length is greater than 10");
+                    storePageKey += 1;
+                    userToStoreHandler.userStoreContactList.isNotEmpty &&
+                        storePageKey <=
+                            (userToStoreHandler
+                                        .contactListModel!.pagination!.total /
+                                    10)
+                                .ceil();
+                    await socketService.onEmitUserStoresContactList(
+                        pageKey: storePageKey);
+                  }
+                });
                 debugPrint("on fetch more data");
-                if (userToStoreHandler.userStoreContactList.length >= 10) {
-                  debugPrint("length is greater than 10");
-                  pageKey += 1;
-                  userToStoreHandler.userStoreContactList.isNotEmpty &&
-                      pageKey <=
-                          (userToStoreHandler
-                                      .contactListModel!.pagination!.total /
-                                  10)
-                              .ceil();
-                  await socketService.onEmitUserStoresContactList(
-                      pageKey: pageKey);
-                }
               },
             )
           ],

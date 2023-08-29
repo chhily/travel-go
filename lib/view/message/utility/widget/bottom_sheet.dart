@@ -7,7 +7,8 @@ import 'package:travel_go/util/ui_helper.dart';
 
 class ActionSheet extends StatelessWidget {
   final Function()? onPressedEdit;
-  const ActionSheet({super.key, this.onPressedEdit});
+  final Function()? onPressDelete;
+  const ActionSheet({super.key, this.onPressedEdit, this.onPressDelete});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +28,7 @@ class ActionSheet extends StatelessWidget {
               textColor: AppColors.textPrimary,
               color: Colors.yellow),
           buildIcon(
-              onPressed: () {},
+              onPressed: onPressDelete,
               iconData: FontAwesomeIcons.trashCan,
               title: "Delete",
               color: Colors.redAccent),

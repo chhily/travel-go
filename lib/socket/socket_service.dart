@@ -16,6 +16,7 @@ import 'package:travel_go/model/message/sender_receiver_model.dart';
 import 'package:travel_go/model/receiver_store.dart';
 import 'package:travel_go/provider/message/contact_handler.dart';
 import 'package:travel_go/provider/message/message_handler.dart';
+import 'package:travel_go/provider/message/store_users_handler.dart';
 import 'package:travel_go/provider/message/user_store_handler.dart';
 import 'package:travel_go/socket/response_type.dart';
 import 'package:travel_go/socket/socket_route.dart';
@@ -29,36 +30,39 @@ class SocketService {
 
   //First step init socket {}
   void initSocket() {
-    // manually connecting to websocket
-    try {
-      socket = IO.io(
-        AppUrl.baseChatUrl,
-        IO.OptionBuilder()
-            .setTransports([transportsMethod])
-            .enableForceNewConnection()
-            .setAuth({'token': AppUrl.senderToken})
-            .build(),
-      );
-      socket.connected;
-      socket.onConnecting((data) => debugPrint("connecting => $data"));
-      socket.onConnect((data) => debugPrint("connected success => $data"));
-      socket.onConnectTimeout(
-          (data) => debugPrint("connection timeout => $data"));
+    // Create a WebSocket connection.
+    socket = IO.io(
+      AppUrl.baseChatUrl,
+      IO.OptionBuilder()
+          .setTransports([transportsMethod])
+          .enableForceNewConnection()
+          .setAuth({'token': AppUrl.senderToken})
+          .build(),
+    );
 
-      socket.onConnectError((data) => debugPrint("connected fail => $data"));
+    // Add error handling.
+    socket.onError(handleSocketError);
 
-      socket.onDisconnect(
-          (data) => debugPrint("got disconnect from socket => $data"));
+    // Add logging.
+    socket.onConnect((data) {
+      debugPrint("Connected to WebSocket: ${data.toString()}");
+    });
 
-      socket.onAny((event, data) => debugPrint("any event => $event, $data"));
-    } catch (e) {
-      debugPrint("fail to init=>  ${e.toString()}");
-    }
+    // Listen for events.
+    socket.onConnecting((data) => debugPrint("connecting => $data"));
+    socket.onConnect((data) => debugPrint("connected success => $data"));
+    socket
+        .onConnectTimeout((data) => debugPrint("connection timeout => $data"));
+
+    socket.onConnectError((data) => debugPrint("connected fail => $data"));
+
+    socket.onDisconnect(
+        (data) => debugPrint("got disconnect from socket => $data"));
   }
 
   // sub to create receive message from socket
   void onCreateReceiveMessageEvent({required String receiverId}) {
-    socket.once(SocketRoute.onReceiveChat, (jsonValue) {
+    socket.on(SocketRoute.onReceiveChat, (jsonValue) {
       log("onGetChatCreate ${SocketRoute.onReceiveChat} $jsonValue");
       if (jsonValue[ResponseField.actionField] == ResponseField.actionCreate) {
         try {
@@ -94,13 +98,41 @@ class SocketService {
   }
 
   //User to Stores list
-
   Future<void> onEmitUserStoresContactList({required int pageKey}) async {
     socket.emit(SocketRoute.pubShopChatLists,
         {"per_page": 10, "page_number": pageKey, "order_by": "DESC"});
     log("pubChatLists ${SocketRoute.pubShopChatLists}, "
         "{per_page: 10, page_number:"
         " $pageKey, order_by: DESC");
+  }
+
+  //Store to users list
+  Future<void> onEmitStoreUsersContactList({
+    required int page,
+    bool isFromNewestToOldest = true,
+  }) async {
+    socket.emit(SocketRoute.pubShopChatLists, {
+      "per_page": 10,
+      "page_number": page,
+
+      /// "DESC" from newest to oldest, while "ASC" from oldest to newest
+      "order_by": isFromNewestToOldest ? "DESC" : "ASC"
+    });
+    log("pubChatLists ${SocketRoute.pubShopChatLists}, "
+        "{per_page: 10, page_number: $page, order_by: "
+        "${isFromNewestToOldest ? "DESC" : "ASC"}} ");
+  }
+
+  Future<void> onGetStoreUsersContactList(
+      {required BuildContext context}) async {
+    final storeUsersHandler =
+        Provider.of<StoreUsersHandler>(context, listen: false);
+    socket.on(SocketRoute.onGetShopChatListsChange, (jsonValue) {
+      if (jsonValue[ResponseField.actionField] == ResponseField.actionGet) {
+
+      } else if (jsonValue[ResponseField.actionField] ==
+          ResponseField.actionNew) {}
+    });
   }
 
   //sub to receive user to users contact list from socket
@@ -119,7 +151,6 @@ class SocketService {
               if (contactList != null) {
                 contactHandler.onGetUserContactList(contactList);
                 contactHandler.onGetContactPagination(contactList.pagination);
-                // contactHandler.onGetLiveContactList(contactList.userContactModel);
               } else {
                 debugPrint("this is another event of receive data");
               }
@@ -139,6 +170,7 @@ class SocketService {
     );
   }
 
+  // sub to receive all user contact list
   Future<UsersContactListModel?> onGetAllUsersContact(dynamic jsonValue) async {
     debugPrint("action get");
     try {
@@ -210,7 +242,6 @@ class SocketService {
     return null;
   }
 
-  //
   Future<PersonalMessageModel?> onReceiveUserStoresLiveContact(
       dynamic jsonValue) async {
     if (jsonValue[ResponseField.actionField] == ResponseField.actionNew) {
@@ -226,7 +257,6 @@ class SocketService {
   }
 
   // send edited message
-
   Future<void> onEmitEditTextMessage(
       {required String chatId,
       required String messageId,
@@ -255,6 +285,14 @@ class SocketService {
     }
   }
 
+  Future<void> onDeleteMessage(
+      {required String? messageId, required String? chatId}) async {
+    socket
+        .emit(SocketRoute.pubChatDelete, {"chat_id": chatId, "_id": messageId});
+    log("pubDeleteChatById ${SocketRoute.pubChatDelete}, {chat_id: $chatId, _id: $messageId}}");
+    socket.onError(handleSocketError);
+  }
+
   // emit to get user chat value ({send chat})
   Future<void> onEmitMessage(
       {required String chatId, required int pageKey}) async {
@@ -274,7 +312,7 @@ class SocketService {
   // on to receive chat
   Future<void> onReceiveChatUserToUser(
       {required String chatId, required BuildContext context}) async {
-    final messageHandler = Provider.of<MessageHandler>(context, listen: false);
+    final messageHandler = Provider.of<MessageProvider>(context, listen: false);
     socket.on("${SocketRoute.onGetChatById}/$chatId", (jsonValue) async {
       /** event handle
        * * this event is to handle data from socket
@@ -295,13 +333,18 @@ class SocketService {
       }
       await onSeenLiveMessage(jsonValue)
           .then((value) => messageHandler.onUpdateSeenMessage(value?.success))
-          .whenComplete(() => UserContactModel(unreadMessagesCount: 0));
+          .whenComplete(() => messageHandler.onResetUnread);
+
+      if (jsonValue[ResponseField.actionField] == ResponseField.actionDelete) {
+        await onListenDeletedMessage(jsonValue)
+            .then((value) => messageHandler.onRemoveDeletedMessage(value));
+      }
     });
   }
 
   Future<void> onSeen(
       {required BuildContext context, required String chatId}) async {
-    final messageHandler = Provider.of<MessageHandler>(context, listen: false);
+    final messageHandler = Provider.of<MessageProvider>(context, listen: false);
     socket.on("${SocketRoute.onGetChatById}/$chatId", (jsonValue) async {
       await onSeenLiveMessage(jsonValue)
           .then((value) => messageHandler.onUpdateSeenMessage(value?.success));
@@ -319,7 +362,7 @@ class SocketService {
       final personalReceiveMessage =
           PersonalMessageListModel.fromJson(handler[ResponseField.dataField]);
       if (personalReceiveMessage.pagination != null) {
-        Provider.of<MessageHandler>(context, listen: false)
+        Provider.of<MessageProvider>(context, listen: false)
             .onGetPagination(personalReceiveMessage.pagination);
       }
       prettyPrintJson(handler[ResponseField.dataField],
@@ -384,6 +427,18 @@ class SocketService {
     return null;
   }
 
+  Future<PersonalMessageModel?> onListenDeletedMessage(
+      dynamic jsonValue) async {
+    try {
+      final deleteValue =
+          PersonalMessageModel.fromJson(jsonValue[ResponseField.dataField]);
+      return deleteValue;
+    } catch (e) {
+      debugPrint("couldn't update deleted message $e");
+    }
+    return null;
+  }
+
   Future<void> onEmitToSeenAllMessage({required String chatId}) async {
     socket.emit(SocketRoute.pubChatSeen, {"chat_id": chatId});
     log("seen all message ${SocketRoute.pubChatSeen}, {chat_id: $chatId}");
@@ -420,11 +475,11 @@ class SocketService {
         .forEach((element) => debugPrint("$msg => $element"));
   }
 
+  void handleSocketError(error) {
+    debugPrint("Error handling socket event: ${error.toString()}");
+  }
+
   void onDisposeListener() {
-    socket.disconnected;
-    socket.close();
-    socket.clearListeners();
-    socket.destroy();
     socket.dispose();
   }
 }

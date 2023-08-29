@@ -14,7 +14,7 @@ class MessageListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<MessageHandler>(
+    return Consumer<MessageProvider>(
       builder: (context, valueNotifier, child) {
         final messageValue = valueNotifier.personalMessageList;
         return PaginationWidgetHandler(

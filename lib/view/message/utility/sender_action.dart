@@ -17,7 +17,7 @@ class SenderActionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<MessageHandler>(context);
+    final provider = Provider.of<MessageProvider>(context);
     return StreamBuilder<bool>(
       stream: provider.editMessageWidgetController.stream,
       builder: (context, snapshot) {

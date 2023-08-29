@@ -15,7 +15,7 @@ import 'package:image_picker/image_picker.dart';
 typedef OnPickImageCallback = void Function(
     double? maxWidth, double? maxHeight, int? quality);
 
-class MessageHandler with ChangeNotifier {
+class MessageProvider with ChangeNotifier {
   final SocketService _socketService = SocketService();
 
   late TextEditingController textMessageCT;
@@ -78,14 +78,27 @@ class MessageHandler with ChangeNotifier {
   }
 
   Future<ReceiverModel?> onGetReceiverInfo({required String receiverId}) async {
-    _receiverModel = await _socketService.onGetUserProfile(id: receiverId);
+    onChangeLoading(true);
+    try {
+      _receiverModel = await _socketService.onGetUserProfile(id: receiverId);
+      onChangeLoading(false);
+    } catch (e) {
+      onChangeLoading(false);
+    }
     return _receiverModel;
   }
 
   Future<ReceiverStoreModel?> onGetStoreReceiverInfo(
       {required String receiverId}) async {
-    _receiverStoreModel =
-        await _socketService.onGetStoreProfile(id: receiverId);
+    onChangeLoading(true);
+    try {
+      _receiverStoreModel =
+          await _socketService.onGetStoreProfile(id: receiverId);
+      onChangeLoading(false);
+    } catch (e) {
+      onChangeLoading(false);
+    }
+
     return _receiverStoreModel;
   }
 
@@ -145,11 +158,27 @@ class MessageHandler with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> onDeleteMessage(
+      {required String? messageId, required String? chatId}) async {
+    try {
+      await _socketService.onDeleteMessage(
+          messageId: messageId, chatId: chatId);
+    } catch (e) {
+      debugPrint("couldn't delete message $e");
+    }
+  }
+
   bool? isSeen = false;
   onUpdateSeenMessage(bool? value) => isSeen = value;
 
   onUpdateSendingMessage(String message) {
     _personalMessageList.insert(0, PersonalMessageModel(message: message));
+    notifyListeners();
+  }
+
+  void onRemoveDeletedMessage(PersonalMessageModel? value) {
+    if (value == null) return;
+    _personalMessageList.removeWhere((element) => element.id == value.id);
     notifyListeners();
   }
 
@@ -243,6 +272,10 @@ class MessageHandler with ChangeNotifier {
     onChangeSendMessageType(null);
     imagePreviewWidgetController.add(false);
     _decodedImage = null;
+  }
+
+  onResetUnread() {
+    notifyListeners();
   }
 
   void onDispose() {
